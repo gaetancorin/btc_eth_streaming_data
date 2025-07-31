@@ -1,0 +1,51 @@
+-------------- AIDE DOCKER COMPOSE ---------------
+construire le docker compose:
+docker-compose -p airflow_streaming up -d
+
+redemarrer le docker compose:
+docker-compose -p airflow_streaming start
+
+arreter le docker compose:
+docker-compose -p airflow_streaming stop
+
+supprimer le docker compose et docker associés:
+docker-compose -p airflow_streaming down
+
+recréer le docker compose:
+docker-compose -p airflow_streaming down
+docker-compose -p airflow_streaming up -d
+
+----------------------------------
+TUTORIEL PREMIER FONCTIONNEMENT
+
+telecharger la dernière version stable de airflow_streaming:
+https://airflow.apache.org/docs/apache-airflow/stable/docker-compose.yaml
+
+retirer les dags par defaut:
+sur le docker-compose
+AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+
+creer fichier .env et ecrire:
+AIRFLOW_UID=50000
+
+créer les containers et aller sur
+http://localhost:8080/
+
+se connecter avec
+airflow
+airflow
+
+si ca lag, ne conserver en fonctionnement que ces containers
+airflow-airflow-apiserver-1
+airflow-airflow-scheduler-1
+airflow-postgres-1
+airflow-redis-1
+
+pour un rafraichissement automatique des dags, ajouter ce container (1refrsh/min)
+airflow-dag-processor
+pour faire tourner un dag, ajouter ce container
+airflow-worker
+
+un changement ? Redamarrer certains containers
+docker-compose -p airflow_streaming restart airflow-worker airflow-dag-processor airflow-apiserver airflow-scheduler postgres redis
+
