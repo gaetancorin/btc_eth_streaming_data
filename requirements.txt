@@ -1,1 +1,4 @@
 yfinance
+apache-airflow
+
+pyspark
