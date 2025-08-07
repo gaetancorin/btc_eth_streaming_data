@@ -24,4 +24,4 @@ try:
     while ws_thread.is_alive():
         ws_thread.join(timeout=1)
 except KeyboardInterrupt:
-    print("end")
+    print("end ETH Thread")

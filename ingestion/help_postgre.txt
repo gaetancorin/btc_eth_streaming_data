@@ -1,0 +1,43 @@
+-------------- AIDE DOCKER COMPOSE POSTGRE ---------------
+construire le docker compose:
+docker-compose -p postgre_streaming up -d
+
+redemarrer le docker compose:
+docker-compose -p postgre_streaming start
+
+arreter le docker compose:
+docker-compose -p postgre_streaming stop
+
+supprimer le docker compose et docker associés:
+docker-compose -p postgre_streaming down
+
+recréer le docker compose:
+docker-compose -p postgre_streaming down
+docker-compose -p postgre_streaming up -d
+
+----------------------------------
+TUTORIEL PREMIER FONCTIONNEMENT
+
+créer les containers
+docker-compose -p postgre_streaming up -d
+et aller sur
+http://localhost:8081/
+
+indiquer user:
+admin@admin.com
+indiquer password:
+password
+
+register->server
+remplir les données "connection" pour connecter
+connexion "hostname/adress" doit être le nom du docker postgre qui s'appelle "postgres"
+(appeller par exemple la base crypto_db)
+
+-----------------------
+créer une table:
+sidebar a gauche, aller sur Servers > postgres-db > Databases > crypto_db > Schemas > public > Tables
+clic droit et créer table
+
+ou
+aller sur barre de gauche gauche query tool workspace et selectionner la base postgre
+écrire le contenu du fichier postgre_test.sql

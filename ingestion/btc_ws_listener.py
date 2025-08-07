@@ -24,17 +24,4 @@ try:
     while ws_thread.is_alive():
         ws_thread.join(timeout=1)
 except KeyboardInterrupt:
-    print("end")
-
-
-# from datetime import datetime
-# from yfinance import WebSocket
-#
-# def handle_message(msg):
-#     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-#     if 'price' in msg:
-#        print(f"[{now}] Prix BTC : {msg['price']}")
-#
-# ws = WebSocket(url= 'wss://streamer.finance.yahoo.com/?version=2', verbose=True)
-# ws.subscribe(["BTC-USD"])
-# ws.listen(handle_message)
+    print("end BTC Thread")

@@ -18,17 +18,19 @@ docker-compose -p airflow_streaming up -d
 ----------------------------------
 TUTORIEL PREMIER FONCTIONNEMENT
 
-telecharger la dernière version stable de airflow_streaming:
+telecharger la dernière version stable de airflow_streaming(deja fait):
 https://airflow.apache.org/docs/apache-airflow/stable/docker-compose.yaml
 
-retirer les dags par defaut:
+retirer les dags par defaut(deja fait):
 sur le docker-compose
 AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
 
 creer fichier .env et ecrire:
 AIRFLOW_UID=50000
 
-créer les containers et aller sur
+créer les containers
+docker-compose -p airflow_streaming up -d
+et aller sur
 http://localhost:8080/
 
 se connecter avec

@@ -1,4 +1,4 @@
 yfinance
+pip-system-certs
 apache-airflow
-
 pyspark
