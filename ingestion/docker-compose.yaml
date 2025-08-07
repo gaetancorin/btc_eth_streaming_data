@@ -25,6 +25,9 @@ services:
       - "8081:80"
     depends_on:
       - postgres
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
 
 volumes:
   pg_data:
+  pgadmin_data:
