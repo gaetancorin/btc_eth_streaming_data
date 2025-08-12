@@ -7,7 +7,7 @@ ws_global_eth = None
 def handle_message(msg):
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     if 'price' in msg:
-        print(f"[{now}] Prix ETH : {msg['price']}")
+        print(f"[{now}] Prix {msg['id']} : {msg['price']}")
 
 def run_ws():
     global ws_global_eth

@@ -18,26 +18,33 @@ docker-compose -p postgre_streaming up -d
 ----------------------------------
 TUTORIEL PREMIER FONCTIONNEMENT
 
-créer les containers
+* créer les containers
 docker-compose -p postgre_streaming up -d
 et aller sur
 http://localhost:8081/
 
-indiquer user:
+* indiquer user:
 admin@admin.com
 indiquer password:
 password
 
-register->server
-remplir les données "connection" pour connecter
-connexion "hostname/adress" doit être le nom du docker postgre qui s'appelle "postgres"
-(appeller par exemple la base crypto_db)
+* connecter postgre au panneau d'admin
+cliquedroit sur servers->register->server
+name= crypto_db
+aller sur "Connection"
+hostname/adress = postgres (doit être le nom du service sur le dockercompose)
+port= 5432 (celui par défaut)
+username = admin
+password= password
 
 -----------------------
-créer une table:
-sidebar a gauche, aller sur Servers > postgres-db > Databases > crypto_db > Schemas > public > Tables
+* créer une table:
+sidebar a gauche, aller sur Servers > crypto-db > Databases > crypto_db > Schemas > public > Tables
 clic droit et créer table
-
-ou
+- OU -
 aller sur barre de gauche gauche query tool workspace et selectionner la base postgre
 écrire le contenu du fichier postgre_test.sql
+
+-------------------------
+* voir le contenu d'une table
+clique droit sur nom de la table->view/edit_data->all rows
