@@ -16,8 +16,10 @@ def handle_message(msg):
         print(f"[{date.strftime("%Y-%m-%d %H:%M:%S%z")}] Price {id} : {price}")
 
         if id not in last_data or utils.compare_utc_date(last_data[id], date) > 30:
-            postgres_manager.write_on_db(table_name=id, price=price, date=date)
             last_data[id] = date
+            result = postgres_manager.write_on_db(table_name=id, price=price, date=date)
+            if not result:
+                print("fail to save data in PostgreSQL, so save data in CSV")
         else:
             print(f"NOT INSERTED: Duplicate value for {id} in the same minute.")
 
