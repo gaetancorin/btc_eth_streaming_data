@@ -22,11 +22,19 @@ telecharger la dernière version stable de airflow_streaming(deja fait):
 https://airflow.apache.org/docs/apache-airflow/stable/docker-compose.yaml
 
 retirer les dags par defaut(deja fait):
-sur le docker-compose
-AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+sur le docker-compose (deja fait)
+AIRFLOW__CORE__LOAD_EXAMPLES: 'false' (deja fait)
 
 creer fichier .env et ecrire:
 AIRFLOW_UID=50000
+
+Si connexion postgre avec dag PostgresHook: (deja fait)
+écrire connexion postgre dans fichier .env (deja fait)
+puis connecter le fichier .env aux dockers en ecrivant dans le docker-compose: (deja fait)
+x-airflow-common:
+    environment:
+          env_file:
+            - .env
 
 créer les containers
 docker-compose -p airflow_streaming up -d

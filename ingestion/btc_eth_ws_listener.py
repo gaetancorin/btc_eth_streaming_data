@@ -13,7 +13,7 @@ def handle_message(msg):
         id = msg['id'].lower().replace("-", "_")
         price = msg['price']
         date = datetime.now(timezone.utc)
-        print(f"[{date.strftime("%Y-%m-%d %H:%M:%S%z")}] Price {id} : {price}")
+        print(f"[{date.strftime('%Y-%m-%d %H:%M:%S%z')}] Price {id} : {price}")
 
         if id not in last_data or utils.compare_utc_date(last_data[id], date) > 30:
             last_data[id] = date
