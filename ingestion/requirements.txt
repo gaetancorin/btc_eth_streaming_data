@@ -1,7 +1,11 @@
+# ingestion
 yfinance
 pip-system-certs
 psycopg2-binary==2.9.9
 
+#airflow
 apache-airflow
 apache-airflow-providers-postgres
+
+#others
 pyspark

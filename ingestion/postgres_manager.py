@@ -26,10 +26,11 @@ class PostgresManager:
 
     def write_on_db(self, table_name, price, date):
         try:
+            date = date.replace(second=0, microsecond=0)
             self._ensure_connexion()
             cursor = self.connect.cursor()
             insert_query = f"""
-                INSERT INTO {table_name} (price, recorded_utc_at)
+                INSERT INTO {table_name} (price, datetime_utc)
                 VALUES (%s, %s)
             """
             cursor.execute(insert_query, (price, date))
