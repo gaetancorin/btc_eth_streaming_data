@@ -1,0 +1,19 @@
+-------------- AIDE DOCKER COMPOSE ---------------
+construire le docker compose:
+docker-compose -p spark_streaming up -d
+
+redemarrer le docker compose:
+docker-compose -p spark_streaming start
+
+arreter le docker compose:
+docker-compose -p spark_streaming stop
+
+supprimer le docker compose et docker associés:
+docker-compose -p spark_streaming down
+
+recréer le docker compose:
+docker-compose -p spark_streaming down
+docker-compose -p spark_streaming up -d
+
+----------------------------------
+TUTORIEL PREMIER FONCTIONNEMENT
