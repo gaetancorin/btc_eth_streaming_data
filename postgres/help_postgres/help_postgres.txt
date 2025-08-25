@@ -2,6 +2,9 @@
 construire le docker compose:
 docker-compose -p postgre_streaming up -d
 
+forcer a tout rebuild:
+docker-compose -p postgre_streaming up --build -d
+
 redemarrer le docker compose:
 docker-compose -p postgre_streaming start
 
