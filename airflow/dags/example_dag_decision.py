@@ -3,7 +3,7 @@ from datetime import datetime
 import random
 
 @dag(schedule='@daily', start_date=datetime(2024, 1, 1), catchup=False)
-def storage_dag():
+def example_dag_decision():
 
     @task
     def check_api():
@@ -42,4 +42,4 @@ def storage_dag():
     decision = decide_storage_strategy(cleaned)
     check_api() >> decision >> [store_to_dwh(), store_locally()]
 
-storage_dag()
+example_dag_decision()

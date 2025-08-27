@@ -2,7 +2,7 @@ from airflow.sdk import dag, task
 from datetime import datetime
 
 @dag(start_date=datetime(2024, 1, 1), schedule='@daily')
-def my_first_dag():
+def example_first_dag():
 
     @task
     def training_model_a():
@@ -33,4 +33,4 @@ def my_first_dag():
     accuracies = [training_model_a(), training_model_b(), training_model_c()]
     choose_best_model(accuracies) >> [accurate(), inaccurate()]
 
-my_first_dag()
+example_first_dag()

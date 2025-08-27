@@ -12,7 +12,7 @@ default_args = {
 }
 
 with DAG(
-    dag_id='old_dag_syntax',  # Ce nom doit être unique
+    dag_id='example_old_dag_syntax',  # Ce nom doit être unique
     default_args=default_args,
     description='Mon premier DAG fait main',
     start_date=datetime(2024, 1, 1),

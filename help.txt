@@ -1,0 +1,42 @@
+DROP TABLE IF EXISTS btc_usd_avg_indicator;
+DROP TABLE IF EXISTS eth_usd_avg_indicator;
+DROP TABLE IF EXISTS btc_usd;
+DROP TABLE IF EXISTS eth_usd;
+
+CREATE TABLE btc_usd (
+  id SERIAL PRIMARY KEY,
+  price NUMERIC(15,4) NOT NULL,
+  datetime_utc TIMESTAMPTZ(0) NOT NULL UNIQUE
+);
+
+CREATE TABLE eth_usd (
+  id SERIAL PRIMARY KEY,
+  price NUMERIC(15,4) NOT NULL,
+  datetime_utc TIMESTAMPTZ(0) NOT NULL UNIQUE
+);
+
+CREATE TABLE btc_usd_avg_indicator (
+    id SERIAL PRIMARY KEY,
+    btc_usd_id INT NOT NULL REFERENCES btc_usd(id) ON DELETE CASCADE,
+    price_avg_3m NUMERIC(15,4) NOT NULL,
+    price_avg_5m NUMERIC(15,4),
+    datetime_utc TIMESTAMPTZ(0) NOT NULL UNIQUE
+);
+
+CREATE TABLE eth_usd_avg_indicator (
+    id SERIAL PRIMARY KEY,
+    eth_usd_id INT NOT NULL REFERENCES eth_usd(id) ON DELETE CASCADE,
+    price_avg_3m NUMERIC(15,4) NOT NULL,
+    price_avg_5m NUMERIC(15,4),
+    datetime_utc TIMESTAMPTZ(0) NOT NULL UNIQUE
+);
+Voici mes tables postgres.
+
+Je t'explique mon système
+J'utilise yfinance en websocket pour récupérer btc_usd et eth_usd toutes les minutes et les loader sur postgres.
+J'utilise airflow toutes les minutes pour récupérer btc_usd sur postgres, calculer la moyenne mobile 3 et 5 minutes, puis écrire le résultat sur postgres.
+
+J'ai donc un fichier python pour l'ingestion, un docker compose pour postres+pgadmin, un docker compose pour airflow, un docker compose pour un master spark + 2 workers.
+
+J'ai réussi a connecter airflow avec postgres et airflow avec spark master.
+J'ai même un dag qui tourne en se connectant a mon spark master. 
