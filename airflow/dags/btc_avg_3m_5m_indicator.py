@@ -10,7 +10,7 @@ from airflow.providers.postgres.hooks.postgres import PostgresHook
     schedule="* * * * *", # each minutes
     catchup=False # not recover old launch
 )
-def btc_avg_indicator():
+def btc_avg_3m_5m_indicator():
 
     @task
     def extract_data():
@@ -30,7 +30,7 @@ def btc_avg_indicator():
     @task
     def transform_data(df: pd.DataFrame):
         if df.empty:
-            print("No new data to process")
+            logging.error("NO NEW DATA TO PROCESS")
             return df
         # calcul des moyennes mobiles
         df["price_avg_3m"] = df["price"].rolling(window=3).mean()
@@ -43,7 +43,7 @@ def btc_avg_indicator():
     @task
     def load_data(df: pd.DataFrame):
         if df.empty or df.dropna(subset=["price_avg_3m"]).empty:
-            logging.info("DF empty, Nothing to load")
+            logging.error("DF EMPTY, NOTHING TO LOAD")
             return
         hook = PostgresHook(postgres_conn_id="my_postgres")
         conn = hook.get_conn()
@@ -59,11 +59,11 @@ def btc_avg_indicator():
         conn.commit()
         cur.close()
         conn.close()
-        print(f"Postgres table btc_usd_avg_indicator loaded row :\n{last_row}")
+        logging.info(f"Postgres table btc_usd_avg_indicator loaded row :\n{last_row}")
 
     # flow du DAG
     df = extract_data()
     transformed_df = transform_data(df)
     load_data(transformed_df)
 
-btc_avg_indicator()
+btc_avg_3m_5m_indicator()

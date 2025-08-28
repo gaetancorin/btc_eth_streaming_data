@@ -3,8 +3,10 @@ from airflow.providers.apache.spark.hooks.spark_connect import SparkConnectHook
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 from pyspark.sql import SparkSession, functions
 from datetime import datetime
-import pandas as pd
 import logging
+import pandas as pd
+pd.set_option("display.max_columns", None)
+pd.set_option("display.width", 200)
 
 @dag(
     start_date=datetime(2025, 1, 1),
@@ -26,14 +28,14 @@ def spark_btc_eth_gap_avg_3m_indicator():
                    WHERE datetime_utc > NOW() - INTERVAL '3 minutes'
                    ORDER BY datetime_utc;
                """)
-        print(f"3 last values into BTC_USD postgres\n{btc_df}")
+        logging.info(f"3 last values into BTC_USD postgres\n{btc_df}")
         eth_df = pg_hook.get_pandas_df("""
                    SELECT *
                    FROM eth_usd
                    WHERE datetime_utc > NOW() - INTERVAL '3 minutes'
                    ORDER BY datetime_utc;
                """)
-        print(f"3 last values into ETH_USD postgres\n{eth_df}")
+        logging.info(f"3 last values into ETH_USD postgres\n{eth_df}")
         btc_df["datetime_utc"] = btc_df["datetime_utc"].astype(str)
         eth_df["datetime_utc"] = eth_df["datetime_utc"].astype(str)
         if btc_df.empty and eth_df.empty:
@@ -55,7 +57,7 @@ def spark_btc_eth_gap_avg_3m_indicator():
         btc_df = btc_df[["price", "datetime_utc"]].rename(columns={"price": "btc_price"})
         eth_df = eth_df[["price", "datetime_utc"]].rename(columns={"price": "eth_price"})
         btc_eth_merged = pd.merge(btc_df, eth_df, on="datetime_utc", how="inner")
-        print(f"BTC_ETH_MERGED\n{btc_eth_merged}")
+        logging.info(f"BTC_ETH_MERGED\n{btc_eth_merged}")
         if btc_eth_merged.empty:
             logging.info("no Common Datetimes between BTC and ETH")
             return
@@ -84,23 +86,23 @@ def spark_btc_eth_gap_avg_3m_indicator():
         # --- MAP: calculate GAP with BTC - ETH differences ---
         gap_btc_eth_sdf = btc_eth_sdf.withColumn("gap_btc_eth", functions.col("btc_price") - functions.col("eth_price"))
         gap_btc_eth_sdf = gap_btc_eth_sdf.withColumn("gap_btc_eth", functions.round(functions.col("gap_btc_eth"), 4))
-        print(f"Calculate GAP with BTC - ETH differences")
+        logging.info(f"Calculate GAP with BTC - ETH differences")
         gap_btc_eth_sdf.show(truncate=False)
 
         # --- REDUCE: calculate AVERAGE of GAPS(the last 3 BTC-ETH differences) ---
         avg_gap_3m_value = gap_btc_eth_sdf.agg(functions.avg("gap_btc_eth").alias("avg_gap_btc_eth_3m")).collect()[0]
         avg_gap_3m_value = float(avg_gap_3m_value["avg_gap_btc_eth_3m"])
         avg_gap_3m_value = round(avg_gap_3m_value, 4)
-        print(f"Average of GAPS btc_eth over last 3 rows: {avg_gap_3m_value}")
+        logging.info(f"Average of GAPS btc_eth over last 3 rows: {avg_gap_3m_value}")
 
         # --- Keep last row, add avg of BTC-ETH differences ---
         last_row = gap_btc_eth_sdf.orderBy(functions.desc("datetime_utc")).limit(1)
         last_row_with_avg = last_row.withColumn("avg_gap_btc_eth_3m", functions.lit(avg_gap_3m_value))
-        print(f"Last row with AVG of BTC-ETH GAP 3 min")
+        logging.info(f"Last row with AVG of BTC-ETH GAP 3 min")
         last_row_with_avg.show(truncate=False)
 
         last_row_with_avg = last_row_with_avg.toPandas()
-        print(last_row_with_avg)
+        logging.info(last_row_with_avg)
         spark.stop()
         return last_row_with_avg
 
@@ -124,7 +126,7 @@ def spark_btc_eth_gap_avg_3m_indicator():
         pg_conn.commit()
         cur.close()
         pg_conn.close()
-        print(f"Postgres table btc_eth_gap_avg_3m_indicator loaded row :\n{df_last_row_with_avg}")
+        logging.info(f"Postgres table btc_eth_gap_avg_3m_indicator loaded row :\n{df_last_row_with_avg}")
         return "done"
 
 
