@@ -8,7 +8,7 @@ from datetime import datetime
     schedule=None,
     catchup=False
 )
-def spark_even_sum():
+def example_spark_even_sum():
 
     @task
     def run_even_sum():
@@ -42,4 +42,4 @@ def spark_even_sum():
 
     run_even_sum()
 
-spark_even_sum()
+example_spark_even_sum()

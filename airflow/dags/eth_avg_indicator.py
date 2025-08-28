@@ -25,27 +25,23 @@ def eth_avg_indicator():
         logging.info(f"Extracted {len(df)} rows")
         logging.info(f"\n {df}")
         df['datetime_utc'] = df['datetime_utc'].astype(str)
-        return df.to_dict(orient="records")
+        return df
 
     @task
-    def transform_data(raw_data: list[dict]):
-        df = pd.DataFrame(raw_data)
-
+    def transform_data(df: pd.DataFrame):
         if df.empty:
             print("No new data to process")
-            return df.to_dict(orient="records")
+            return df
         # calcul des moyennes mobiles
         df["price_avg_3m"] = df["price"].rolling(window=3).mean()
         df["price_avg_5m"] = df["price"].rolling(window=5).mean()
 
         df = df.replace({np.nan: None})
         logging.info(f"Average calculated on 3 and 5 minutes:\n {df}")
-
-        return df.to_dict(orient="records")
+        return df
 
     @task
-    def load_data(transformed: list[dict]):
-        df = pd.DataFrame(transformed)
+    def load_data(df: pd.DataFrame):
         if df.empty or df.dropna(subset=["price_avg_3m"]).empty:
             logging.info("DF empty, Nothing to load")
             return
@@ -66,8 +62,8 @@ def eth_avg_indicator():
         print(f"Postgres table eth_usd_avg_indicator loaded row :\n{last_row}")
 
     # flow du DAG
-    raw_data = extract_data()
-    transformed = transform_data(raw_data)
-    load_data(transformed)
+    df = extract_data()
+    transformed_df = transform_data(df)
+    load_data(transformed_df)
 
 eth_avg_indicator()

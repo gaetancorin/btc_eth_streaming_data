@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS btc_eth_gap_avg_3m_indicator;
+DROP TABLE IF EXISTS btc_eth_gap_avg_5m_indicator;
 DROP TABLE IF EXISTS btc_usd_avg_indicator;
 DROP TABLE IF EXISTS eth_usd_avg_indicator;
 DROP TABLE IF EXISTS btc_usd;
@@ -30,13 +32,26 @@ CREATE TABLE eth_usd_avg_indicator (
     price_avg_5m NUMERIC(15,4),
     datetime_utc TIMESTAMPTZ(0) NOT NULL UNIQUE
 );
+
+CREATE TABLE btc_eth_gap_avg_5m_indicator (
+    id SERIAL PRIMARY KEY,
+    btc_eth_gap_avg_5m NUMERIC(15,4),
+    datetime_utc TIMESTAMPTZ(0) NOT NULL UNIQUE
+);
+
+CREATE TABLE btc_eth_gap_avg_3m_indicator (
+    id SERIAL PRIMARY KEY,
+    btc_eth_gap_avg_3m NUMERIC(15,4),
+    datetime_utc TIMESTAMPTZ(0) NOT NULL UNIQUE
+);
 Voici mes tables postgres.
 
 Je t'explique mon système
-J'utilise yfinance en websocket pour récupérer btc_usd et eth_usd toutes les minutes et les loader sur postgres.
-J'utilise airflow toutes les minutes pour récupérer btc_usd sur postgres, calculer la moyenne mobile 3 et 5 minutes, puis écrire le résultat sur postgres.
+- J'utilise yfinance en websocket pour récupérer btc_usd et eth_usd toutes les minutes et les loader sur postgres.
+- J'utilise airflow toutes les minutes pour récupérer btc_usd sur postgres, calculer la moyenne mobile 3 et 5 minutes, puis écrire le résultat sur postgres sur une nouvelle table.
+- J'utilise airflow toutes les minutes pour récupérer btc_usd et eth_usd sur postgres sur les 3 dernières minutes, faire la différences entre btc et eth sur chaque minute de manière distribué avec spark(1master 2 workers) en map, faire un reduce en faisant la moyenne des différences des 3 minutes, puis insérer le résultat de la moyenne des ecart etdu datetime sur postgres sur une nouvelle table
 
-J'ai donc un fichier python pour l'ingestion, un docker compose pour postres+pgadmin, un docker compose pour airflow, un docker compose pour un master spark + 2 workers.
+J'ai donc un fichier python pour l'ingestion, un docker compose pour postres+pgadmin, un docker compose pour airflow3, un docker compose pour un master spark + 2 workers.
 
 J'ai réussi a connecter airflow avec postgres et airflow avec spark master.
-J'ai même un dag qui tourne en se connectant a mon spark master. 
+Tu as tout compris ?
