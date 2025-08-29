@@ -14,7 +14,7 @@ pd.set_option("display.width", 200)
     #schedule=None,
     catchup=False
 )
-def spark_btc_eth_gap_avg_3m_indicator():
+def spark_btc_eth_gap_avg_5m_indicator():
 
     @task
     def extract_btc_eth_data_on_postgres():
@@ -25,17 +25,17 @@ def spark_btc_eth_gap_avg_3m_indicator():
         btc_df = pg_hook.get_pandas_df("""
                    SELECT *
                    FROM btc_usd
-                   WHERE datetime_utc > NOW() - INTERVAL '3 minutes'
+                   WHERE datetime_utc > NOW() - INTERVAL '6 minutes'
                    ORDER BY datetime_utc;
                """)
-        logging.info(f"3 last values into BTC_USD postgres\n{btc_df}")
+        logging.info(f"5 last values into BTC_USD postgres\n{btc_df}")
         eth_df = pg_hook.get_pandas_df("""
                    SELECT *
                    FROM eth_usd
-                   WHERE datetime_utc > NOW() - INTERVAL '3 minutes'
+                   WHERE datetime_utc > NOW() - INTERVAL '6 minutes'
                    ORDER BY datetime_utc;
                """)
-        logging.info(f"3 last values into ETH_USD postgres\n{eth_df}")
+        logging.info(f"5 last values into ETH_USD postgres\n{eth_df}")
         btc_df["datetime_utc"] = btc_df["datetime_utc"].astype(str)
         eth_df["datetime_utc"] = eth_df["datetime_utc"].astype(str)
         if btc_df.empty and eth_df.empty:
@@ -89,16 +89,16 @@ def spark_btc_eth_gap_avg_3m_indicator():
         logging.info(f"Calculate GAP with BTC - ETH differences")
         gap_btc_eth_sdf.show(truncate=False)
 
-        # --- REDUCE: calculate AVERAGE of GAPS(the last 3 BTC-ETH differences) ---
-        avg_gap_3m_value = gap_btc_eth_sdf.agg(functions.avg("gap_btc_eth").alias("avg_gap_btc_eth_3m")).collect()[0]
-        avg_gap_3m_value = float(avg_gap_3m_value["avg_gap_btc_eth_3m"])
-        avg_gap_3m_value = round(avg_gap_3m_value, 4)
-        logging.info(f"Average of GAPS btc_eth over last 3 rows: {avg_gap_3m_value}")
+        # --- REDUCE: calculate AVERAGE of GAPS(the last 5 BTC-ETH differences) ---
+        avg_gap_5m_value = gap_btc_eth_sdf.agg(functions.avg("gap_btc_eth").alias("avg_gap_btc_eth_5m")).collect()[0]
+        avg_gap_5m_value = float(avg_gap_5m_value["avg_gap_btc_eth_5m"])
+        avg_gap_5m_value = round(avg_gap_5m_value, 4)
+        logging.info(f"Average of GAPS btc_eth over last 5 rows: {avg_gap_5m_value}")
 
         # --- Keep last row, add avg of BTC-ETH differences ---
         last_row = gap_btc_eth_sdf.orderBy(functions.desc("datetime_utc")).limit(1)
-        last_row_with_avg = last_row.withColumn("avg_gap_btc_eth_3m", functions.lit(avg_gap_3m_value))
-        logging.info(f"Last row with AVG of BTC-ETH GAP 3 min")
+        last_row_with_avg = last_row.withColumn("avg_gap_btc_eth_5m", functions.lit(avg_gap_5m_value))
+        logging.info(f"Last row with AVG of BTC-ETH GAP 5 min")
         last_row_with_avg.show(truncate=False)
 
         last_row_with_avg = last_row_with_avg.toPandas()
@@ -119,14 +119,14 @@ def spark_btc_eth_gap_avg_3m_indicator():
         # --- Load Pandas row into Postgres  ---
         for _, row in df_last_row_with_avg.iterrows():
             cur.execute("""
-                        INSERT INTO btc_eth_gap_avg_3m_indicator(btc_eth_gap_avg_3m, datetime_utc)
+                        INSERT INTO btc_eth_gap_avg_5m_indicator(btc_eth_gap_avg_5m, datetime_utc)
                         VALUES (%s, %s)
                         ON CONFLICT (datetime_utc) DO NOTHING;
-                    """, (row["avg_gap_btc_eth_3m"],  row["datetime_utc"]))
+                    """, (row["avg_gap_btc_eth_5m"],  row["datetime_utc"]))
         pg_conn.commit()
         cur.close()
         pg_conn.close()
-        logging.info(f"Postgres table btc_eth_gap_avg_3m_indicator loaded row :\n{df_last_row_with_avg}")
+        logging.info(f"Postgres table btc_eth_gap_avg_5m_indicator loaded row :\n{df_last_row_with_avg}")
         return "done"
 
 
@@ -135,4 +135,4 @@ def spark_btc_eth_gap_avg_3m_indicator():
     df_last_row_with_avg = calculate_btc_eth_gap_and_avg_with_spark(btc_eth_merged)
     load_row_to_postgres(df_last_row_with_avg)
 
-spark_btc_eth_gap_avg_3m_indicator()
+spark_btc_eth_gap_avg_5m_indicator()

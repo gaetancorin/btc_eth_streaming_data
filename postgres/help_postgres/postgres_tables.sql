@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS btc_eth_gap_avg_3m_indicator;
+DROP TABLE IF EXISTS btc_eth_gap_avg_5m_indicator;
 DROP TABLE IF EXISTS btc_usd_avg_indicator;
 DROP TABLE IF EXISTS eth_usd_avg_indicator;
 DROP TABLE IF EXISTS btc_usd;
@@ -32,9 +32,9 @@ CREATE TABLE eth_usd_avg_indicator (
     datetime_utc TIMESTAMPTZ(0) NOT NULL UNIQUE
 );
 
-CREATE TABLE btc_eth_gap_avg_3m_indicator (
+CREATE TABLE btc_eth_gap_avg_5m_indicator (
     id SERIAL PRIMARY KEY,
-    btc_eth_gap_avg_3m NUMERIC(15,4),
+    btc_eth_gap_avg_5m NUMERIC(15,4),
     datetime_utc TIMESTAMPTZ(0) NOT NULL UNIQUE
 );
 
