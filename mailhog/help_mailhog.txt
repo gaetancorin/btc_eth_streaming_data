@@ -1,0 +1,22 @@
+-------------- AIDE DOCKER COMPOSE ---------------
+construire le docker compose:
+docker-compose -p mailhog_streaming up -d
+
+forcer a tout rebuild:
+docker-compose -p mailhog_streaming up --build -d
+
+redemarrer le docker compose:
+docker-compose -p mailhog_streaming start
+
+arreter le docker compose:
+docker-compose -p mailhog_streaming stop
+
+supprimer le docker compose et docker associés:
+docker-compose -p mailhog_streaming down
+
+recréer le docker compose:
+docker-compose -p mailhog_streaming down
+docker-compose -p mailhog_streaming up -d
+
+----------------------------------
+TUTORIEL PREMIER FONCTIONNEMENT

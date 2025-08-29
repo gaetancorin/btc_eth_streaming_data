@@ -1,0 +1,22 @@
+-------------- AIDE DOCKER COMPOSE ---------------
+construire le docker compose:
+docker-compose -p papercut_streaming up -d
+
+forcer a tout rebuild:
+docker-compose -p papercut_streaming up --build -d
+
+redemarrer le docker compose:
+docker-compose -p papercut_streaming start
+
+arreter le docker compose:
+docker-compose -p papercut_streaming stop
+
+supprimer le docker compose et docker associés:
+docker-compose -p papercut_streaming down
+
+recréer le docker compose:
+docker-compose -p papercut_streaming down
+docker-compose -p papercut_streaming up -d
+
+----------------------------------
+TUTORIEL PREMIER FONCTIONNEMENT

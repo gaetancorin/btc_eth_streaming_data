@@ -1,0 +1,21 @@
+services:
+  greenmail:
+    image: greenmail/standalone:1.6.15
+    container_name: greenmail
+    ports:
+      - "3025:3025"   # SMTP
+      - "3465:3465"   # SMTPS
+      - "3143:3143"   # IMAP
+      - "3993:3993"   # IMAPS
+      - "3110:3110"   # POP3
+      - "3995:3995"   # POP3S
+      - "8081:8080"   # REST API
+    environment:
+      - JAVA_OPTS=-Dgreenmail.setup.all -Dgreenmail.users=test:pwd@localhost -Dgreenmail.verbose -Dgreenmail.start.rest=true
+    networks:
+      - airflow_net
+
+networks:
+  airflow_net:
+    external: true
+    name: airflow_streaming_default
