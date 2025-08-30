@@ -6,9 +6,9 @@ services:
       - "8025:8025"  # Web UI
       - "1025:1025"  # SMTP
     networks:
-      - airflow_net
+      - mailhog_net
 
 networks:
-  airflow_net:
+  mailhog_net:
     external: true
     name: airflow_streaming_default
