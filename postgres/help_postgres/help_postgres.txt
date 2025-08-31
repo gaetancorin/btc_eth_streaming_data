@@ -31,7 +31,7 @@ admin@admin.com
 indiquer password:
 password
 
-* connecter postgre au panneau d'admin
+* connecter postgre au panneau d'admin: (a été automatisé, ne plus faire)
 cliquedroit sur servers->register->server
 name= crypto_db
 aller sur "Connection"
@@ -41,7 +41,7 @@ username = admin
 password= password
 
 -----------------------
-* créer une table:
+* créer une table: (a été automatisé, ne plus faire)
 sidebar a gauche, aller sur Servers > crypto-db > Databases > crypto_db > Schemas > public > Tables
 clic droit et créer table
 - OU -

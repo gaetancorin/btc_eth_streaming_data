@@ -1,0 +1,15 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "db_crypto",
+      "Group": "Servers",
+      "Host": "postgres",
+      "Port": 5432,
+      "MaintenanceDB": "crypto_db",
+      "Username": "admin",
+      "Password": "password",
+      "SSLMode": "prefer",
+      "SavePassword": true
+    }
+  }
+}
