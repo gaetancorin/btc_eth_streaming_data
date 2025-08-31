@@ -18,7 +18,7 @@ receiver = os.getenv("RECEIVER") # receiver email
     schedule=None,
     catchup=False  # not recover old launch
 )
-def test_function_email():
+def send_email():
     @task
     def get_parameter():
         print("Value of smtp_user:", smtp_user)
@@ -59,4 +59,4 @@ def test_function_email():
     get_parameter()
     test_email_sending()
 
-test_function_email()
+send_email()

@@ -1,14 +1,14 @@
-from airflow.sdk import DAG, task
+from airflow.sdk import dag, task
 from datetime import datetime
 import logging
 from airflow.sdk import get_current_context
 from airflow.utils.trigger_rule import TriggerRule
 
-with DAG(
-    dag_id="print_dag_parameters_if_task_fail",
+@dag(
     start_date=datetime(2024, 1, 1),
     schedule=None
-) as dag:
+)
+def print_dag_parameters_if_task_fail():
 
     @task
     def my_task():
@@ -21,7 +21,9 @@ with DAG(
         raise Exception("❌ This task fails on purpose!")
 
     @task(trigger_rule=TriggerRule.ONE_FAILED, retries=0)
-    def watcher():
+    def watcher(t1, t2):
+        logging.info(f"t1={t1}")
+        logging.info(f"t2={t2}")
         context = get_current_context()
         logging.info(f"PRINT DAG PARAMETER:\n {context}")
         ti = context["ti"]
@@ -32,6 +34,8 @@ with DAG(
         map_index = ti.map_index
         logging.info(f"PRINT PARAMETER:\n {dag_id}.{task_id}, Run: {run_id}, Try: {try_number}, Map Index: {map_index}")
 
-    my_task()
-    always_fail()
-    list(dag.tasks) >> watcher()
+    t1 = my_task()
+    t2 = always_fail()
+    [t1, t2] >> watcher(t1, t2)
+
+print_dag_parameters_if_task_fail()
