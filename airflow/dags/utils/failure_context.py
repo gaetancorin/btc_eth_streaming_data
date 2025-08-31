@@ -2,7 +2,7 @@ import logging
 from airflow.sdk import get_current_context
 
 def get_failure_context():
-    logging.info("INSIDE FAILURE CONTEXT")
+    logging.info("INSIDE UTILS FAILURE CONTEXT")
     # context = get_current_context()
     # ti = context["ti"]
     # dag_id = ti.dag_id

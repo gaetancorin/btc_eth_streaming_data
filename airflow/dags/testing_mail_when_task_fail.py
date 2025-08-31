@@ -1,4 +1,4 @@
-from airflow.sdk import DAG, task
+from airflow.sdk import dag, task
 from datetime import datetime
 import logging
 from airflow.sdk import get_current_context
@@ -6,11 +6,11 @@ from airflow.utils.trigger_rule import TriggerRule
 from utils.failure_context import get_failure_context
 from utils.email_alert import test_email_sending
 
-with DAG(
-    dag_id="testing_mail_when_task_fail",
+@dag(
     start_date=datetime(2024, 1, 1),
     schedule=None
-) as dag:
+)
+def testing_mail_when_task_fail():
 
     @task
     def my_task():
@@ -23,7 +23,9 @@ with DAG(
         raise Exception("❌ This task fails on purpose!")
 
     @task(trigger_rule=TriggerRule.ONE_FAILED, retries=0)
-    def when_fail():
+    def when_fail(t1, t2):
+        logging.info(f"t1={t1}")
+        logging.info(f"t2={t2}")
 
         # context = get_current_context()
         # logging.info(f"PRINT DAG PARAMETER:\n {context}")
@@ -32,10 +34,11 @@ with DAG(
         # task_id = ti.task_id
         # logging.info(f"PRINT PARAMETER:\n {dag_id}.{task_id}")
 
-        get_failure_context()
-        test_email_sending()
+        # get_failure_context()
+        # test_email_sending()
 
+    t1 = my_task()
+    t2 = always_fail()
+    [t1, t2] >> when_fail(t1, t2)
 
-    my_task()
-    always_fail()
-    list(dag.tasks) >> when_fail()
+testing_mail_when_task_fail()
