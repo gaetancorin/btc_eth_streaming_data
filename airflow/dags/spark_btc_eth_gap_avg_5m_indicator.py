@@ -4,6 +4,8 @@ from airflow.providers.postgres.hooks.postgres import PostgresHook
 from pyspark.sql import SparkSession, functions
 from datetime import datetime
 import logging
+from airflow.utils.trigger_rule import TriggerRule
+from utils.failure_tasks_manager import notify_failure_tasks
 import pandas as pd
 pd.set_option("display.max_columns", None)
 pd.set_option("display.width", 200)
@@ -129,10 +131,18 @@ def spark_btc_eth_gap_avg_5m_indicator():
         logging.info(f"Postgres table btc_eth_gap_avg_5m_indicator loaded row :\n{df_last_row_with_avg}")
         return "done"
 
+    @task(trigger_rule=TriggerRule.ONE_FAILED, retries=0)
+    def task_fail_notifier(tasks_dict: dict):
+        notify_failure_tasks(tasks_dict)
+
 
     btc_eth_data = extract_btc_eth_data_on_postgres()
     btc_eth_merged = merge_btc_eth_on_datetime(btc_eth_data)
     df_last_row_with_avg = calculate_btc_eth_gap_and_avg_with_spark(btc_eth_merged)
-    load_row_to_postgres(df_last_row_with_avg)
+    t4 = load_row_to_postgres(df_last_row_with_avg)
+
+
+    [btc_eth_data, btc_eth_merged, df_last_row_with_avg, t4] >> task_fail_notifier(
+        {"extract_btc_eth_data_on_postgres": btc_eth_data, "merge_btc_eth_on_datetime": btc_eth_merged, "calculate_btc_eth_gap_and_avg_with_spark": df_last_row_with_avg, "load_row_to_postgres": t4})
 
 spark_btc_eth_gap_avg_5m_indicator()

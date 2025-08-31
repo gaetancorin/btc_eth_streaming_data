@@ -21,11 +21,10 @@ def get_parameter():
     print("Value of smtp_port:", smtp_port)
     print("Value of receiver:", receiver)
 
-def send_email_failure_tasks(dag_id, run_id, dag_run_url, tasks_to_show):
+def send_failure_tasks_email(dag_id, run_id, dag_run_url, tasks_to_show):
     tasks_html = ""
     for task_name, task_result in tasks_to_show.items():
-        task_result = (task_result or "FAIL").upper()  # sûr et en majuscule
-        if task_result == "SUCESS":
+        if task_result == "SUCCESS":
             tasks_html += f"<li>Task {task_name}  : {task_result} ✅</li>"
         else:
             tasks_html += f"<li>Task {task_name}  : {task_result} ❌</li>"

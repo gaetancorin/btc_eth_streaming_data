@@ -4,10 +4,13 @@ import pandas as pd
 import numpy as np
 import logging
 from airflow.providers.postgres.hooks.postgres import PostgresHook
+from airflow.utils.trigger_rule import TriggerRule
+from utils.failure_tasks_manager import notify_failure_tasks
 
 @dag(
     start_date=datetime(2025, 1, 1),
     schedule="* * * * *", # each minutes
+    #schedule=None,
     catchup=False # not recover old launch
 )
 def eth_avg_3m_5m_indicator():
@@ -61,9 +64,15 @@ def eth_avg_3m_5m_indicator():
         conn.close()
         logging.info(f"Postgres table eth_usd_avg_indicator loaded row :\n{last_row}")
 
+    @task(trigger_rule=TriggerRule.ONE_FAILED, retries=0)
+    def task_fail_notifier(tasks_dict: dict):
+        notify_failure_tasks(tasks_dict)
+
     # flow du DAG
     df = extract_data()
     transformed_df = transform_data(df)
-    load_data(transformed_df)
+    t3 = load_data(transformed_df)
+
+    [df, transformed_df, t3] >> task_fail_notifier({"extract_data": df, "transform_data": transformed_df, "load_data": t3})
 
 eth_avg_3m_5m_indicator()
