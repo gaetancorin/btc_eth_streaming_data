@@ -1,0 +1,16 @@
+# Python3.11
+
+# ingestion
+yfinance
+pip-system-certs
+psycopg2-binary==2.9.9
+python-dotenv
+pandas
+
+#airflow
+apache-airflow==3.0.3
+apache-airflow-providers-postgres
+apache-airflow-providers-apache-spark
+
+#others
+pyspark

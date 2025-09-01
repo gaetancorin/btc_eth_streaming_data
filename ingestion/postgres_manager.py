@@ -78,6 +78,8 @@ class PostgresManager:
                 cursor.close()
                 print(f"{file_name.upper()} WAITING DATA LOADING SUCESSFULLY INTO POSTGRES")
                 os.remove(file_path)
+                if not os.listdir("waiting_data_store"):
+                    os.rmdir("waiting_data_store")
                 print(f"File {file_path} deleted successfully")
             except Exception as e:
                 print(f"ERROR while loading waiting data {file_name.upper()} into Postgres: {e}")

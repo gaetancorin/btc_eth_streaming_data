@@ -4,11 +4,5 @@
 yfinance
 pip-system-certs
 psycopg2-binary==2.9.9
-
-#airflow
-apache-airflow==3.0.3
-apache-airflow-providers-postgres
-apache-airflow-providers-apache-spark
-
-#others
-pyspark
+python-dotenv
+pandas

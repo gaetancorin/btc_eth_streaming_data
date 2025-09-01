@@ -1,0 +1,57 @@
+-------------- DOCKERFILE ---------------
+# Construire l'image a partir du dockerfile et lancer le container
+docker build -t ingestion_streaming . ; docker run -d --name ingestion_streaming ingestion_streaming
+
+# Arreter et supprimer le container:
+docker stop ingestion_streaming ; docker rm ingestion_streaming
+
+# Construire l'image à partir du Dockerfile
+docker build -t ingestion_streaming .
+
+# Lancer le container en arrière-plan
+docker run -d --name ingestion_streaming ingestion_streaming
+
+# Lancer le container en mode interactif (utile pour debug)
+docker run -it --rm --name ingestion_streaming ingestion_streaming bash
+
+# Arrêter le container
+docker stop ingestion_streaming
+
+# Supprimer le container
+docker rm ingestion_streaming
+
+# Supprimer l'image
+docker rmi python_ingestion_streaming
+
+# Voir les containers en cours
+docker ps
+
+# Voir tous les containers (y compris arrêtés)
+docker ps -a
+
+# Voir les images locales
+docker images
+
+
+-------------- AIDE DOCKER COMPOSE ---------------
+construire le docker compose:
+docker-compose -p ingestion_streaming up -d
+
+forcer a tout rebuild:
+docker-compose -p ingestion_streaming up --build -d
+
+redemarrer le docker compose:
+docker-compose -p ingestion_streaming start
+
+arreter le docker compose:
+docker-compose -p ingestion_streaming stop
+
+supprimer le docker compose et docker associés:
+docker-compose -p ingestion_streaming down
+
+recréer le docker compose:
+docker-compose -p ingestion_streaming down
+docker-compose -p ingestion_streaming up -d
+
+----------------------------------
+TUTORIEL PREMIER FONCTIONNEMENT
