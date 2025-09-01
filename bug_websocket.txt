@@ -20,5 +20,3 @@ websockets.exceptions.ConnectionClosedError: no close frame received or sent
 Error while listening to messages: %s no close frame received or sent
 
 
------------------
-Quand bug qui envoi vers csv, lorsque la connexion revient, il n arrive pas a se connecter

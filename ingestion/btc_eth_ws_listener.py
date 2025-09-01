@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 from yfinance import WebSocket
 from postgres_manager import PostgresManager
 import utils as utils
+import time
 
 postgres_manager = PostgresManager()
 ws_global = None
@@ -19,15 +20,23 @@ def handle_message(msg):
             last_data[id] = date
             result = postgres_manager.write_on_db(table_name=id, price=price, date=date)
             if not result:
-                print("fail to save data in PostgreSQL, so save data in CSV")
+                print("FAIL to save data in PostgreSQL, so save data in CSV")
         else:
             print(f"NOT INSERTED: Duplicate value for {id} in the same minute.")
 
+
 def run_ws():
     global ws_global
-    ws_global = WebSocket(url='wss://streamer.finance.yahoo.com/?version=2', verbose=True)
-    ws_global.subscribe(["BTC-USD", "ETH-USD"])
-    ws_global.listen(handle_message)
+    while True:
+        try:
+            print("inside try")
+            ws_global = WebSocket(url='wss://streamer.finance.yahoo.com/?version=2', verbose=True)
+            ws_global.subscribe(["BTC-USD", "ETH-USD"])
+            ws_global.listen(handle_message)
+        except Exception as e:
+            print(f"⚠️ WebSocket Yfinance fail : {e}")
+            print("⏳ Websocket Yfinance try reconnect in 5 secondes...")
+            time.sleep(5)
 
 # Thread WebSocket
 ws_thread = threading.Thread(target=run_ws)

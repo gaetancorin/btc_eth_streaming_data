@@ -17,12 +17,18 @@ class PostgresManager:
             "password": os.getenv("PASSWORD"),
         }
         self.connect = None
-        self._ensure_connexion()
+        try:
+            self._ensure_connexion()
+        except Exception:
+            print("ERROR on postgres_manager/__init__")
+            traceback.print_exc(file=sys.stderr)
 
     def _ensure_connexion(self):
         if self.connect is None or self.connect.closed != 0:
             self.connect = psycopg2.connect(**self.connect_params)
             print("Connect to PostGreSQL")
+            if self.connect.closed == 0:
+                print("LOAD waiting CSV data into Postgres")
 
     def write_on_db(self, table_name, price, date):
         try:
@@ -40,7 +46,7 @@ class PostgresManager:
             cursor.close()
             return True
         except Exception:
-            print("ERROR on postgres_manager/write_on_db", file=sys.stderr)
+            print("ERROR on postgres_manager/write_on_db")
             traceback.print_exc(file=sys.stderr)
             return None
 
