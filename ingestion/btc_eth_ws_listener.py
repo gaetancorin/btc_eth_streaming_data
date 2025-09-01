@@ -16,11 +16,14 @@ def handle_message(msg):
         date = datetime.now(timezone.utc)
         print(f"[{date.strftime('%Y-%m-%d %H:%M:%S%z')}] Price {id} : {price}")
 
+        # data is valide if new data have more than 30 secondes compare to old data
         if id not in last_data or utils.compare_utc_date(last_data[id], date) > 30:
             last_data[id] = date
+            date = date.replace(second=0, microsecond=0)
             result = postgres_manager.write_on_db(table_name=id, price=price, date=date)
             if not result:
                 print("FAIL to save data in PostgreSQL, so save data in CSV")
+                utils.save_waiting_data_into_csv(table_name = id, price = price, date = date)
         else:
             print(f"NOT INSERTED: Duplicate value for {id} in the same minute.")
 
@@ -29,7 +32,6 @@ def run_ws():
     global ws_global
     while True:
         try:
-            print("inside try")
             ws_global = WebSocket(url='wss://streamer.finance.yahoo.com/?version=2', verbose=True)
             ws_global.subscribe(["BTC-USD", "ETH-USD"])
             ws_global.listen(handle_message)
