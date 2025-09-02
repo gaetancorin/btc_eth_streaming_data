@@ -14,7 +14,8 @@ pd.set_option("display.width", 200)
     start_date=datetime(2025, 1, 1),
     schedule="* * * * *",  # each minute
     #schedule=None,
-    catchup=False
+    catchup=False,
+    is_paused_upon_creation=False
 )
 def spark_btc_eth_gap_avg_5m_indicator():
 

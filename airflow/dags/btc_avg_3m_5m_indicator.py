@@ -11,7 +11,8 @@ from utils.failure_tasks_manager import notify_failure_tasks
     start_date=datetime(2025, 1, 1),
     schedule="* * * * *", # each minutes
     #schedule=None,
-    catchup=False # not recover old launch
+    catchup=False, # not recover old launch
+    is_paused_upon_creation=False
 )
 def btc_avg_3m_5m_indicator():
 
