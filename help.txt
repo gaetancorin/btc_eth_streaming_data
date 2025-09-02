@@ -55,3 +55,22 @@ J'ai donc un fichier python pour l'ingestion, un docker compose pour postres+pga
 
 J'ai réussi a connecter airflow avec postgres et airflow avec spark master.
 Tu as tout compris ?
+
+
+-------------------
+Architecture:
+->airflow
+    ->docker-compose.yaml
+    (docker-compose -p airflow_streaming up --build -d)
+->ingestion
+    ->Dockerfile
+    (docker build -t ingestion_streaming . ; docker run -d --name ingestion_streaming ingestion_streaming)
+->mailhog
+    ->docker-compose.yaml
+    (docker-compose -p mailhog_streaming up --build -d)
+->postgres
+    ->docker-compose.yaml
+    (docker-compose -p postgres_streaming up --build -d)
+->spark
+    ->docker-compose.yaml
+    (docker-compose -p spark_streaming up --build -d)

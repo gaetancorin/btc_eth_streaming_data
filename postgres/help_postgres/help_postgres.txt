@@ -1,28 +1,28 @@
 -------------- AIDE DOCKER COMPOSE POSTGRE ---------------
 construire le docker compose:
-docker-compose -p postgre_streaming up -d
+docker-compose -p postgres_streaming up -d
 
 forcer a tout rebuild:
-docker-compose -p postgre_streaming up --build -d
+docker-compose -p postgres_streaming up --build -d
 
 redemarrer le docker compose:
-docker-compose -p postgre_streaming start
+docker-compose -p postgres_streaming start
 
 arreter le docker compose:
-docker-compose -p postgre_streaming stop
+docker-compose -p postgres_streaming stop
 
 supprimer le docker compose et docker associés:
-docker-compose -p postgre_streaming down
+docker-compose -p postgres_streaming down
 
 recréer le docker compose:
-docker-compose -p postgre_streaming down
-docker-compose -p postgre_streaming up -d
+docker-compose -p postgres_streaming down
+docker-compose -p postgres_streaming up -d
 
 ----------------------------------
 TUTORIEL PREMIER FONCTIONNEMENT
 
 * créer les containers
-docker-compose -p postgre_streaming up -d
+docker-compose -p postgres_streaming up -d
 et aller sur
 http://localhost:8081/
 
