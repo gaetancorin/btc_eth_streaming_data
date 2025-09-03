@@ -3,7 +3,7 @@
     "1": {
       "Name": "db_crypto",
       "Group": "Servers",
-      "Host": "postgres",
+      "Host": "postgres_external",
       "Port": 5432,
       "MaintenanceDB": "crypto_db",
       "Username": "admin",

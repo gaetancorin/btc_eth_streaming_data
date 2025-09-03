@@ -1,7 +1,7 @@
 services:
-  postgres:
+  postgres_external:
     image: postgres:15
-    container_name: postgres-db
+    container_name: postgres_external
     restart: always
     environment:
       POSTGRES_USER: admin
@@ -25,7 +25,7 @@ services:
     ports:
       - "8081:80"
     depends_on:
-      - postgres
+      - postgres_external
     volumes:
       - pgadmin_data:/var/lib/pgadmin
       - ./servers.json:/pgadmin4/servers.json

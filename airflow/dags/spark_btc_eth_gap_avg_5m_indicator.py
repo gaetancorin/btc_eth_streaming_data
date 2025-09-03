@@ -96,18 +96,24 @@ def spark_btc_eth_gap_avg_5m_indicator():
         avg_gap_5m_value = gap_btc_eth_sdf.agg(functions.avg("gap_btc_eth").alias("avg_gap_btc_eth_5m")).collect()[0]
         avg_gap_5m_value = float(avg_gap_5m_value["avg_gap_btc_eth_5m"])
         avg_gap_5m_value = round(avg_gap_5m_value, 4)
-        logging.info(f"Average of GAPS btc_eth over last 5 rows: {avg_gap_5m_value}")
+        logging.info(f"Value of Average of GAPS btc_eth over last 5 rows: {avg_gap_5m_value}")
 
         # --- Keep last row, add avg of BTC-ETH differences ---
         last_row = gap_btc_eth_sdf.orderBy(functions.desc("datetime_utc")).limit(1)
+        logging.info(f"Keep only last row:")
+        last_row.show(truncate=False)
+
         last_row_with_avg = last_row.withColumn("avg_gap_btc_eth_5m", functions.lit(avg_gap_5m_value))
-        logging.info(f"Last row with AVG of BTC-ETH GAP 5 min")
+        logging.info(f"Add Value AVG of BTC-ETH GAP 5 min into last row:")
         last_row_with_avg.show(truncate=False)
 
-        last_row_with_avg = last_row_with_avg.toPandas()
-        logging.info(last_row_with_avg)
+        df_last_row_with_avg = last_row_with_avg.toPandas()
+        df_last_row_with_avg = df_last_row_with_avg[["avg_gap_btc_eth_5m", "datetime_utc"]]
+        logging.info(f"Transform into pandas and keep only AVG of BTC-ETH GAP 5 and datetime columns")
+        logging.info(df_last_row_with_avg)
+
         spark.stop()
-        return last_row_with_avg
+        return df_last_row_with_avg
 
     @task
     def load_row_to_postgres(df_last_row_with_avg):

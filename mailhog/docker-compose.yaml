@@ -11,4 +11,4 @@ services:
 networks:
   mailhog_net:
     external: true
-    name: airflow_streaming_default
+    name: postgres_streaming_default
