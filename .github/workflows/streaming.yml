@@ -20,19 +20,19 @@ jobs:
       - name: Start Postgres
         run: |
           cd postgres
-          docker-compose -p postgres_streaming up -d --build
+          docker compose -p postgres_streaming up -d --build
 
       # 2. Spark
       - name: Start Spark
         run: |
           cd spark
-          docker-compose -p spark_streaming up -d --build
+          docker compose -p spark_streaming up -d --build
 
       # 3. Mailhog
       - name: Start Mailhog
         run: |
           cd mailhog
-          docker-compose -p mailhog_streaming up -d --build
+          docker compose -p mailhog_streaming up -d --build
 
       # 4. Ingestion
       - name: Build & Run Ingestion
@@ -45,4 +45,4 @@ jobs:
       - name: Start Airflow
         run: |
           cd airflow
-          docker-compose -p airflow_streaming up -d --build
+          docker compose -p airflow_streaming up -d --build
