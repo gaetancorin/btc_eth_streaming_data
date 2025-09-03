@@ -1,0 +1,52 @@
+name: Streaming Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+
+#      - name: Create common Docker network
+#        run: |
+#          docker network create streaming_network || true
+
+      # 1. Postgres
+      - name: Start Postgres
+        run: |
+          cd postgres
+          docker-compose -p postgres_streaming up -d --build
+
+      # 2. Spark
+      - name: Start Spark
+        run: |
+          cd spark
+          docker-compose -p spark_streaming up -d --build
+
+      # 3. Mailhog
+      - name: Start Mailhog
+        run: |
+          cd mailhog
+          docker-compose -p mailhog_streaming up -d --build
+
+      # 4. Ingestion
+      - name: Build & Run Ingestion
+        run: |
+          cd ingestion
+          docker build -t ingestion_streaming .
+          docker run -d --name ingestion_streaming --network postgres_streaming_default ingestion_streaming
+
+      # 5. Airflow
+      - name: Start Airflow
+        run: |
+          cd airflow
+          docker-compose -p airflow_streaming up -d --build

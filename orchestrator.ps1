@@ -26,7 +26,7 @@ cd ..
 Write-Output "CREATE INGESTION CONTAINER"
 cd ingestion
 docker build -t ingestion_streaming .
-docker run -d --name ingestion_streaming ingestion_streaming
+docker run -d --name ingestion_streaming --network postgres_streaming_default ingestion_streaming
 cd ..
 
 Write-Output "ALL CONTAINERS CREATED SUCESSFULLY"
