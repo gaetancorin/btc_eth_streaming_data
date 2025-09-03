@@ -58,6 +58,7 @@ Tu as tout compris ?
 
 
 -------------------
+Voici l'architecture de mon projet:
 Architecture:
 ->airflow
     ->docker-compose.yaml
@@ -74,3 +75,7 @@ Architecture:
 ->spark
     ->docker-compose.yaml
     (docker-compose -p spark_streaming up --build -d)
+
+L'objectif est de lancé tout cela avec github action.
+L'ordre est important car ils partage tous le meme network de postgres.doit être
+L'ordre de création des containers doit être postgres, spark, mailhog, ingestion, airflow

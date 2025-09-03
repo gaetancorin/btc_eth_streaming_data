@@ -11,6 +11,4 @@ pandas
 apache-airflow==3.0.3
 apache-airflow-providers-postgres
 apache-airflow-providers-apache-spark
-
-#others
 pyspark
