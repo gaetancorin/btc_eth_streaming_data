@@ -12,11 +12,11 @@ class PostgresManager:
 
     def __init__(self):
         self.connect_params = {
-            "host": os.getenv("HOST"),
-            "port": int(os.getenv("PORT")),
-            "dbname": os.getenv("DBNAME"),
-            "user": os.getenv("USER"),
-            "password": os.getenv("PASSWORD"),
+            "host": os.getenv("PG_HOST"),
+            "port": int(os.getenv("PG_PORT")),
+            "dbname": os.getenv("PG_DBNAME"),
+            "user": os.getenv("PG_USER"),
+            "password": os.getenv("PG_PASSWORD"),
         }
         self.connect = None
         try:
