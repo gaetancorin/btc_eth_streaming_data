@@ -12,6 +12,8 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - postgres_streaming_default
 
   pgadmin:
     image: dpage/pgadmin4
@@ -27,7 +29,13 @@ services:
     volumes:
       - pgadmin_data:/var/lib/pgadmin
       - ./servers.json:/pgadmin4/servers.json
+    networks:
+      - postgres_streaming_default
 
 volumes:
   pg_data:
   pgadmin_data:
+
+networks:
+  postgres_streaming_default:
+    name: postgres_streaming_default

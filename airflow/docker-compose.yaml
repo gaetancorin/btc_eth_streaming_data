@@ -335,3 +335,9 @@ services:
 
 volumes:
   postgres-db-volume:
+
+networks:
+  default:
+    external: true
+    name: postgres_streaming_default
+
