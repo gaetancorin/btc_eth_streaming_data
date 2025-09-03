@@ -3,7 +3,7 @@ name: Streaming Deployment
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   deploy:
@@ -15,10 +15,6 @@ jobs:
 
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
-
-#      - name: Create common Docker network
-#        run: |
-#          docker network create streaming_network || true
 
       # 1. Postgres
       - name: Start Postgres
