@@ -65,11 +65,11 @@ jobs:
           cd ingestion
           
           # Generate a temporary .env file
-          echo "HOST=${{ vars.HOST }}" > .env
-          echo "PORT=${{ vars.PORT }}" >> .env
-          echo "DBNAME=${{ vars.DBNAME }}" >> .env
-          echo "USER=${{ vars.USER }}" >> .env
-          echo "PASSWORD=${{ secrets.PASSWORD }}" >> .env
+          echo "PG_HOST=${{ vars.HOST }}" > .env
+          echo "PG_PORT=${{ vars.PORT }}" >> .env
+          echo "PG_DBNAME=${{ vars.DBNAME }}" >> .env
+          echo "PG_USER=${{ vars.USER }}" >> .env
+          echo "PG_PASSWORD=${{ secrets.PASSWORD }}" >> .env
           
           docker build -t ingestion_streaming .
           docker run -d --name ingestion_streaming --network postgres_streaming_default --env-file .env ingestion_streaming
