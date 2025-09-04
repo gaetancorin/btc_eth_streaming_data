@@ -42,7 +42,6 @@ jobs:
           
           # Generate a temporary .env file
           $envFile = ".env"
-
           "AIRFLOW_UID=${{ vars.AIRFLOW_UID }}" | Out-File -FilePath $envFile -Encoding utf8
           "PG_HOST=${{ vars.PG_HOST }}" | Out-File -FilePath $envFile -Append -Encoding utf8
           "PG_PORT=${{ vars.PG_PORT }}" | Out-File -FilePath $envFile -Append -Encoding utf8
@@ -69,11 +68,12 @@ jobs:
           cd ingestion
           
           # Generate a temporary .env file
-          echo "PG_HOST=${{ vars.PG_HOST }}" > .env
-          echo "PG_PORT=${{ vars.PG_PORT }}" >> .env
-          echo "PG_DBNAME=${{ vars.PG_DBNAME }}" >> .env
-          echo "PG_USER=${{ vars.PG_USER }}" >> .env
-          echo "PG_PASSWORD=${{ secrets.PG_PASSWORD }}" >> .env
+          $envFile = ".env"
+          "PG_HOST=${{ vars.PG_HOST }}" | Out-File -FilePath $envFile -Encoding utf8
+          "PG_PORT=${{ vars.PG_PORT }}" | Out-File -FilePath $envFile -Append -Encoding utf8
+          "PG_DBNAME=${{ vars.PG_DBNAME }}" | Out-File -FilePath $envFile -Append -Encoding utf8
+          "PG_USER=${{ vars.PG_USER }}" | Out-File -FilePath $envFile -Append -Encoding utf8
+          "PG_PASSWORD=${{ secrets.PG_PASSWORD }}" | Out-File -FilePath $envFile -Append -Encoding utf8
           
           docker build -t ingestion_streaming .
           docker run -d --name ingestion_streaming --network postgres_streaming_default --env-file .env ingestion_streaming
