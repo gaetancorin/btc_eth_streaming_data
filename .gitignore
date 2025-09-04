@@ -4,3 +4,4 @@ config/
 .env
 __pycache__/
 .idea/
+actions-runner/
