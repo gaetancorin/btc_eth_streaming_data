@@ -81,4 +81,3 @@ L'ordre est important car ils partage tous le meme network de postgres.doit êtr
 L'ordre de création des containers doit être postgres, spark, mailhog, ingestion, airflow
 
 https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/control-deployments
-.
