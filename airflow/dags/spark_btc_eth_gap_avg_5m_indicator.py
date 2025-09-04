@@ -141,6 +141,7 @@ def spark_btc_eth_gap_avg_5m_indicator():
     @task(trigger_rule=TriggerRule.ONE_FAILED, retries=0)
     def task_fail_notifier(tasks_dict: dict):
         notify_failure_tasks(tasks_dict)
+        raise Exception("✅ TASK FAIL NOTIFIER EXECUTED SUCESSFULLY !\n ✅ But need to raising Exception to force Red DAG failure")
 
 
     btc_eth_data = extract_btc_eth_data_on_postgres()
