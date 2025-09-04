@@ -1,6 +1,6 @@
 Faire tourner la fin du CI/CD (CD) directement sur le pc sans payer de vps (self-hosted runner)
 
-A la racine du repository:
+A la racine du repository, faire les installation (toujours "enter" sans parametrer):
 https://github.com/gaetancorin/btc_eth_streaming_data/settings/actions/runners/new
 
 Lancer le self-hosted runner:

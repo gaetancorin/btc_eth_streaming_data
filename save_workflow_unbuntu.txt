@@ -7,8 +7,8 @@ on:
 
 jobs:
   deploy:
-#    runs-on: ubuntu-latest
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
+
     environment: dev
     steps:
       - name: Checkout repository
@@ -37,10 +37,9 @@ jobs:
 
       # 4. Airflow
       - name: Start Airflow
-        shell: bash
         run: |
           cd airflow
-          
+
           # Generate a temporary .env file
           echo "AIRFLOW_UID=${{ vars.AIRFLOW_UID }}" > .env
           echo "PG_HOST=${{ vars.PG_HOST }}" >> .env
@@ -58,21 +57,20 @@ jobs:
           echo "SMTP_SERVER=${{ vars.SMTP_SERVER }}" >> .env
           echo "SMTP_PORT=${{ vars.SMTP_PORT }}" >> .env
           echo "RECEIVER=${{ vars.RECEIVER }}" >> .env
-          
+
           docker compose -p airflow_streaming up -d --build
 
       # 5. Ingestion
       - name: Start Ingestion
-        shell: bash
         run: |
           cd ingestion
-          
+
           # Generate a temporary .env file
           echo "PG_HOST=${{ vars.PG_HOST }}" > .env
           echo "PG_PORT=${{ vars.PG_PORT }}" >> .env
           echo "PG_DBNAME=${{ vars.PG_DBNAME }}" >> .env
           echo "PG_USER=${{ vars.PG_USER }}" >> .env
           echo "PG_PASSWORD=${{ secrets.PG_PASSWORD }}" >> .env
-          
+
           docker build -t ingestion_streaming .
           docker run -d --name ingestion_streaming --network postgres_streaming_default --env-file .env ingestion_streaming
