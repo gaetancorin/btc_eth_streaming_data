@@ -60,7 +60,8 @@ jobs:
           "SMTP_PORT=${{ vars.SMTP_PORT }}" | Out-File -FilePath $envFile -Append -Encoding utf8
           "RECEIVER=${{ vars.RECEIVER }}" | Out-File -FilePath $envFile -Append -Encoding utf8
           
-          docker compose -p airflow_streaming up -d --build
+          docker compose -p airflow_streaming build
+          docker compose -p airflow_streaming up -d
 
       # 5. Ingestion
       - name: Start Ingestion
