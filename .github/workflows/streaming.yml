@@ -37,33 +37,50 @@ jobs:
 
       # 4. Airflow
       - name: Start Airflow
-        shell: bash
         run: |
           cd airflow
           
           # Generate a temporary .env file
-          echo "AIRFLOW_UID=${{ vars.AIRFLOW_UID }}" > .env
-          echo "PG_HOST=${{ vars.PG_HOST }}" >> .env
-          echo "PG_PORT=${{ vars.PG_PORT }}" >> .env
-          echo "PG_DBNAME=${{ vars.PG_DBNAME }}" >> .env
-          echo "PG_USER=${{ vars.PG_USER }}" >> .env
-          echo "PG_PASSWORD=${{ secrets.PG_PASSWORD }}" >> .env
-          echo "AIRFLOW_CONN_MY_POSTGRES=${{ vars.AIRFLOW_CONN_MY_POSTGRES }}" >> .env
-          echo "SPARK_HOST=${{ vars.SPARK_HOST }}" >> .env
-          echo "SPARK_PORT=${{ vars.SPARK_PORT }}" >> .env
-          echo "SPARK_PARAM=${{ vars.SPARK_PARAM }}" >> .env
-          echo "AIRFLOW_CONN_MY_SPARK=${{ vars.AIRFLOW_CONN_MY_SPARK }}" >> .env
-          echo "SMTP_USER=${{ secrets.SMTP_USER }}" >> .env
-          echo "SMTP_PASS=${{ secrets.SMTP_PASS }}" >> .env
-          echo "SMTP_SERVER=${{ vars.SMTP_SERVER }}" >> .env
-          echo "SMTP_PORT=${{ vars.SMTP_PORT }}" >> .env
-          echo "RECEIVER=${{ vars.RECEIVER }}" >> .env
+#          echo "AIRFLOW_UID=${{ vars.AIRFLOW_UID }}" > .env
+#          echo "PG_HOST=${{ vars.PG_HOST }}" >> .env
+#          echo "PG_PORT=${{ vars.PG_PORT }}" >> .env
+#          echo "PG_DBNAME=${{ vars.PG_DBNAME }}" >> .env
+#          echo "PG_USER=${{ vars.PG_USER }}" >> .env
+#          echo "PG_PASSWORD=${{ secrets.PG_PASSWORD }}" >> .env
+#          echo "AIRFLOW_CONN_MY_POSTGRES=${{ vars.AIRFLOW_CONN_MY_POSTGRES }}" >> .env
+#          echo "SPARK_HOST=${{ vars.SPARK_HOST }}" >> .env
+#          echo "SPARK_PORT=${{ vars.SPARK_PORT }}" >> .env
+#          echo "SPARK_PARAM=${{ vars.SPARK_PARAM }}" >> .env
+#          echo "AIRFLOW_CONN_MY_SPARK=${{ vars.AIRFLOW_CONN_MY_SPARK }}" >> .env
+#          echo "SMTP_USER=${{ secrets.SMTP_USER }}" >> .env
+#          echo "SMTP_PASS=${{ secrets.SMTP_PASS }}" >> .env
+#          echo "SMTP_SERVER=${{ vars.SMTP_SERVER }}" >> .env
+#          echo "SMTP_PORT=${{ vars.SMTP_PORT }}" >> .env
+#          echo "RECEIVER=${{ vars.RECEIVER }}" >> .env
+
+          $envFile = ".env"
+
+          "AIRFLOW_UID=${{ vars.AIRFLOW_UID }}" | Out-File -FilePath $envFile -Encoding utf8
+          "PG_HOST=${{ vars.PG_HOST }}" | Out-File -FilePath $envFile -Append -Encoding utf8
+          "PG_PORT=${{ vars.PG_PORT }}" | Out-File -FilePath $envFile -Append -Encoding utf8
+          "PG_DBNAME=${{ vars.PG_DBNAME }}" | Out-File -FilePath $envFile -Append -Encoding utf8
+          "PG_USER=${{ vars.PG_USER }}" | Out-File -FilePath $envFile -Append -Encoding utf8
+          "PG_PASSWORD=${{ secrets.PG_PASSWORD }}" | Out-File -FilePath $envFile -Append -Encoding utf8
+          "AIRFLOW_CONN_MY_POSTGRES=postgres://${{ vars.PG_USER }}:${{ secrets.PG_PASSWORD }}@${{ vars.PG_HOST }}:${{ vars.PG_PORT }}/${{ vars.PG_DBNAME }}" | Out-File -FilePath $envFile -Append -Encoding utf8
+          "SPARK_HOST=${{ vars.SPARK_HOST }}" | Out-File -FilePath $envFile -Append -Encoding utf8
+          "SPARK_PORT=${{ vars.SPARK_PORT }}" | Out-File -FilePath $envFile -Append -Encoding utf8
+          "SPARK_PARAM=${{ vars.SPARK_PARAM }}" | Out-File -FilePath $envFile -Append -Encoding utf8
+          "AIRFLOW_CONN_MY_SPARK=spark://${{ vars.SPARK_HOST }}:${{ vars.SPARK_PORT }}?${{ vars.SPARK_PARAM }}" | Out-File -FilePath $envFile -Append -Encoding utf8
+          "SMTP_USER=${{ secrets.SMTP_USER }}" | Out-File -FilePath $envFile -Append -Encoding utf8
+          "SMTP_PASS=${{ secrets.SMTP_PASS }}" | Out-File -FilePath $envFile -Append -Encoding utf8
+          "SMTP_SERVER=${{ vars.SMTP_SERVER }}" | Out-File -FilePath $envFile -Append -Encoding utf8
+          "SMTP_PORT=${{ vars.SMTP_PORT }}" | Out-File -FilePath $envFile -Append -Encoding utf8
+          "RECEIVER=${{ vars.RECEIVER }}" | Out-File -FilePath $envFile -Append -Encoding utf8
           
           docker compose -p airflow_streaming up -d --build
 
       # 5. Ingestion
       - name: Start Ingestion
-        shell: bash
         run: |
           cd ingestion
           
