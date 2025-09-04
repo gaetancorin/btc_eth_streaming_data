@@ -8,7 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    environment: dev
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -36,7 +36,6 @@ jobs:
 
       # 4. Airflow
       - name: Start Airflow
-        environment: airflow
         run: |
           cd airflow
           
@@ -62,7 +61,6 @@ jobs:
 
       # 5. Ingestion
       - name: Build & Run Ingestion
-        environment: ingestion
         run: |
           cd ingestion
           
