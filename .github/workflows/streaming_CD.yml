@@ -7,7 +7,7 @@ on:
       - completed
 
 jobs:
-  deploy:
+  continuous_deployement:
     # seulement si Streaming CI est success
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: self-hosted

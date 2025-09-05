@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  deploy:
+  continuous_integration:
     runs-on: ubuntu-latest
     environment: dev
     steps:
