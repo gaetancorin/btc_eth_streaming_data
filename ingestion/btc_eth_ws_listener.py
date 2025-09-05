@@ -22,10 +22,10 @@ def handle_message(msg):
             date = date.replace(second=0, microsecond=0)
             result = postgres_manager.write_on_db(table_name=id, price=price, date=date)
             if not result:
-                print("FAIL to save data in PostgreSQL, so save data in CSV")
+                print("COULD NOT save data in PostgreSQL, so save data in CSV")
                 utils.save_waiting_data_into_csv(table_name = id, price = price, date = date)
         else:
-            print(f"NOT INSERTED: Duplicate value for {id} in the same minute.")
+            print(f"Not Inserted: Duplicate value for {id} in the same minute.")
 
 
 def run_ws():
