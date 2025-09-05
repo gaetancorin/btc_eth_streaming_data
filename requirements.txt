@@ -6,6 +6,7 @@ pip-system-certs
 psycopg2-binary==2.9.9
 python-dotenv
 pandas
+pytest
 
 #airflow
 apache-airflow==3.0.3

@@ -1,0 +1,6 @@
+lancer les tests (dans ingestion):
+python -m pytest tests/
+
+lancer les tests en voyant les logs (dans ingestion):
+dans: (.venv) PS C:\Users\GaetanCORIN\Documents\btc_eth_streaming_data\ingestion>
+python -m pytest -v -s tests/

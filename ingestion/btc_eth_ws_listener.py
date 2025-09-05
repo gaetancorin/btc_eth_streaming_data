@@ -5,7 +5,7 @@ from postgres_manager import PostgresManager
 import utils as utils
 import time
 
-postgres_manager = PostgresManager()
+postgres_manager = None
 ws_global = None
 last_data = {}
 
@@ -40,13 +40,20 @@ def run_ws():
             print("⏳ Websocket Yfinance try reconnect in 5 secondes...")
             time.sleep(5)
 
-# Thread WebSocket
-ws_thread = threading.Thread(target=run_ws)
-ws_thread.start()
+def start_ingestion():
+    global postgres_manager
+    postgres_manager = PostgresManager()
 
-# Boucle d'attente pour bloquer le main thread
-try:
-    while ws_thread.is_alive():
-        ws_thread.join(timeout=1)
-except KeyboardInterrupt:
-    print("end BTC and ETH Thread")
+    # Thread WebSocket
+    ws_thread = threading.Thread(target=run_ws)
+    ws_thread.start()
+
+    # Boucle d'attente pour bloquer le main thread
+    try:
+        while ws_thread.is_alive():
+            ws_thread.join(timeout=1)
+    except KeyboardInterrupt:
+        print("end BTC and ETH Thread")
+
+if __name__ == "__main__":
+    start_ingestion()

@@ -73,3 +73,9 @@ jobs:
 
           docker build -t ingestion_streaming .
           docker run -d --name ingestion_streaming --network postgres_streaming_default --env-file .env ingestion_streaming
+
+      # 6. Run Unit Tests into Ingestion
+      - name: Run Ingestion Unit Tests
+        run: |
+          cd ingestion
+          python -m pytest -v -s tests/
