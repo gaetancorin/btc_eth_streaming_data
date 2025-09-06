@@ -1,9 +1,9 @@
 # Python3.11
 
 # ingestion
-yfinance
-pip-system-certs
+yfinance #==0.2.65
+pip-system-certs #==5.2
 psycopg2-binary==2.9.9
-python-dotenv
-pandas
-pytest
+python-dotenv #==1.1.1
+pandas #==2.3.2
+pytest #==8.4.2

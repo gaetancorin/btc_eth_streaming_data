@@ -1,6 +1,6 @@
 -------------- DOCKERFILE ---------------
 # Construire l'image a partir du dockerfile et lancer le container
-docker build -t ingestion_streaming . ; docker run -d --name ingestion_streaming ingestion_streaming
+docker build -t ingestion_streaming . ; docker run -d --name ingestion_streaming --network postgres_streaming_default ingestion_streaming
 
 # Arreter et supprimer le container:
 docker stop ingestion_streaming ; docker rm ingestion_streaming

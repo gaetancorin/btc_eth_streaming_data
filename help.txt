@@ -1,3 +1,11 @@
+Voir les variables d'environnements dans les containers:
+-- Airflow --
+docker exec -it airflow_streaming-airflow-worker-1 python -c "import os; [print(f'{k}={v}') for k,v in os.environ.items()]"
+-- Ingestion --
+docker exec -it ingestion_streaming python -c "from dotenv import load_dotenv; import os; load_dotenv(); [print(f'{k}={v}') for k,v in os.environ.items()]"
+
+------------------------------------
+
 DROP TABLE IF EXISTS btc_eth_gap_avg_3m_indicator;
 DROP TABLE IF EXISTS btc_eth_gap_avg_5m_indicator;
 DROP TABLE IF EXISTS btc_usd_avg_indicator;

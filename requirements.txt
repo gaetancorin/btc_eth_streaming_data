@@ -1,15 +1,15 @@
-# Python3.11
+# Python3.11 # Launch for remove IDE error
 
 # ingestion
-yfinance
-pip-system-certs
+yfinance #==0.2.65
+pip-system-certs #==5.2
 psycopg2-binary==2.9.9
-python-dotenv
-pandas
-pytest
+python-dotenv #==1.1.1
+pandas #==2.3.2
+pytest #==8.4.2
 
 #airflow
 apache-airflow==3.0.3
-apache-airflow-providers-postgres
-apache-airflow-providers-apache-spark
-pyspark
+apache-airflow-providers-postgres # Not be manage, it is install automatically by airflow image
+apache-airflow-providers-apache-spark==5.3.2
+pyspark==4.0.0

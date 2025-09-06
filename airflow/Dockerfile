@@ -13,4 +13,4 @@ ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 USER airflow
 
 # Install Spark provider + PySpark
-RUN pip install --no-cache-dir apache-airflow-providers-apache-spark pyspark
+RUN pip install --no-cache-dir apache-airflow-providers-apache-spark==5.3.2 pyspark==4.0.0
