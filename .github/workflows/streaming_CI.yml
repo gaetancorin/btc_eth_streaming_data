@@ -78,14 +78,3 @@ jobs:
       - name: Run Ingestion Unit Tests
         run: |
           docker exec ingestion_streaming python -m pytest -v -s tests/
-
-      # 6. Run Unit Tests into Ingestion
-      #- name: Run Ingestion Unit Tests
-      #  run: |
-      #    cd ingestion
-      #    python -m venv venv
-      #    source venv/bin/activate
-      #    pip install --upgrade pip
-      #    pip install -r requirements.txt
-      #    pip install pytest
-      #    python -m pytest -v -s tests/

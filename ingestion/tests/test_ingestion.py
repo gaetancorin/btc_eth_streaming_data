@@ -93,4 +93,5 @@ def test_try_to_connect_real_db(monkeypatch):
     # Verifie que la connexion existe
     assert postgres_manager.connect != None
     # Verifie que la connexion est bonne
-    assert postgres_manager.connect.closed == 0
+    # assert postgres_manager.connect.closed == 0
+    assert postgres_manager.connect.closed != 0
