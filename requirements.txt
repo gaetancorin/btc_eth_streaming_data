@@ -13,3 +13,7 @@ apache-airflow==3.0.3
 apache-airflow-providers-postgres # Not be manage, it is install automatically by airflow image
 apache-airflow-providers-apache-spark==5.3.2
 pyspark==4.0.0
+
+#monitoring
+prometheus_client #==0.22.1
+docker #==7.1.0

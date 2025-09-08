@@ -20,6 +20,8 @@ docker-compose -p monitoring_streaming up -d
 
 ----------------------------------
 TUTORIEL PREMIER FONCTIONNEMENT
+! Aller sur docker desktop->Parametre->General-cocher Expose daemon on tcp://localhost:2375 without TLS
+Redemarrer Docker desktop
 
 (Cadvisor ne fonctionne pas a cause de WSL)
 - docker_client doit affiché les données:

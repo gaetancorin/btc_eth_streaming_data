@@ -8,38 +8,50 @@ client = docker.DockerClient(base_url="tcp://host.docker.internal:2375")
 # Connexion au daemon Docker via TCP sur Windows (Dans container)
 # client = docker.DockerClient(base_url="tcp://localhost:2375")
 
-# Gauge Prometheus pour exposer les conteneurs
-container_names = Gauge('docker_container_info', 'Docker container names', ['id', 'name', 'status'])
+container_state_gauge = Gauge(
+    'docker_container_state',
+    'State of Docker containers (1=running, 0=not running)',
+    ['id', 'name', 'status'])
 
-cpu_gauge = Gauge(
+container_cpu_used_gauge = Gauge(
     'docker_container_cpu_percent',
     'CPU usage percentage per container',
     ['id', 'name']
 )
-total_cpu_gauge = Gauge('docker_total_cpu_percent', 'Total CPU usage percentage for all running containers')
+total_cpu_used_gauge = Gauge(
+    'docker_total_cpu_used_percent',
+    'Total CPU usage percentage for all running containers'
+)
+total_cpu_available_gauge = Gauge(
+    'docker_total_cpu_available_percent',
+    'Total available CPU percentage on the Docker host (100% * nb_cores)'
+)
 
-memory_gauge = Gauge(
-    'docker_container_memory_bytes',
-    'Memory usage in bytes per container',
+container_memory_used_gauge = Gauge(
+    'docker_container_memory_used_mb',
+    'Memory usage in megabytes per container',
     ['id', 'name']
 )
-total_memory_used_gauge = Gauge('docker_total_used_memory_bytes', 'Total memory usage in bytes for all running containers')
+total_memory_used_gauge = Gauge(
+    'docker_total_memory_used_mb',
+    'Total memory usage in megabytes for all running containers'
+)
 total_memory_available_gauge = Gauge(
-    'docker_total_memory_available_bytes',
-    'Total memory available on the Docker host'
+    'docker_total_memory_available_mb',
+    'Total memory available in megabytes on the Docker host'
 )
 
 def update_metrics():
     containers = client.containers.list(all=True)
-    container_names.clear()
+    container_state_gauge.clear()
 
     # Récupérer l'état du container: 1=Running, 0=Exited
     for c in containers:
-        value = 1 if c.status == "running" else 0
-        container_names.labels(id=c.short_id, name=c.name, status=c.status).set(value)
+        state = 1 if c.status == "running" else 0
+        container_state_gauge.labels(id=c.short_id, name=c.name, status=c.status).set(state)
 
     # Récupérer la consommation CPU par conteneur
-    total_cpu = 0.0
+    total_cpu_used = 0.0
     for c in containers:
         if c.status == "running":
             try:
@@ -59,45 +71,57 @@ def update_metrics():
                 # Différence = consommation CPU du serveur global entre les deux mesures
                 system_delta = current_system_cpu - last_system_cpu
 
-                cpu_percent = 0.0
+                container_cpu_percent_used = 0.0
                 if system_delta > 0 and cpu_delta > 0:
                     # Nombres de coeurs CPUs dédiés aux serveur (ex:6)
-                    cpu_cores = len(stats["cpu_stats"]["cpu_usage"]["percpu_usage"])
+                    cpu_cores = int(stats["cpu_stats"]["online_cpus"])
                     # Calcul du % d'utilisation CPU du conteneur par rapport au serveur global.
                     #Multiplier par le nombres de coeurs CPU pour avoir un ratio 600% pour 6 coeurs par ex
-                    cpu_percent = (cpu_delta / system_delta) * cpu_cores * 100.0
-
-                    cpu_gauge.labels(id=c.short_id, name=c.name).set(cpu_percent)
-                    total_cpu += cpu_percent
+                    container_cpu_percent_used = (cpu_delta / system_delta) * cpu_cores * 100.0
+                    # arrondis x.xx %
+                    container_cpu_percent_used = round(container_cpu_percent_used, 2)
+                    container_cpu_used_gauge.labels(id=c.short_id, name=c.name).set(container_cpu_percent_used)
+                    total_cpu_used += container_cpu_percent_used
             except Exception as e:
-                cpu_gauge.labels(id=c.short_id, name=c.name).set(0)
+                container_cpu_used_gauge.labels(id=c.short_id, name=c.name).set(0)
         else:
-            cpu_gauge.remove(c.short_id, c.name)
-    total_cpu_gauge.set(total_cpu)
+            container_cpu_used_gauge.remove(c.short_id, c.name)
+    total_cpu_used_gauge.set(total_cpu_used)
 
 
     # Récupérer la consommation mémoire par conteneur
-    total_memory = 0.0
+    total_memory_used = 0.0
     for c in containers:
         if c.status == "running":
             try:
                 stats = c.stats(stream=False)
                 # Mémoire
-                memory = stats["memory_stats"]["usage"]
-                memory_gauge.labels(id=c.short_id, name=c.name).set(memory)
-                total_memory += memory
+                container_memory_used_bytes = stats["memory_stats"]["usage"]
+                container_memory_used_mb = container_memory_used_bytes / (1024 * 1024)
+                container_memory_used_mb = round(container_memory_used_mb, 2)
+                container_memory_used_gauge.labels(id=c.short_id, name=c.name).set(container_memory_used_mb)
+                total_memory_used += container_memory_used_mb
             except Exception as e:
                 # Si erreur, mettre les metrics à -1
-                memory_gauge.labels(id=c.short_id, name=c.name).set(-1)
+                container_memory_used_gauge.labels(id=c.short_id, name=c.name).set(-1)
         else:
-            memory_gauge.remove(c.short_id, c.name)
-    total_memory_used_gauge.set(total_memory)
+            container_memory_used_gauge.remove(c.short_id, c.name)
+    total_memory_used_gauge.set(total_memory_used)
 
+    # Récupérer la capacité de % de cpu et de mémoire dédiés a Docker
     if containers:
+        stats = containers[0].stats(stream=False)
         try:
-            stats = containers[0].stats(stream=False)
-            total_memory_available = stats["memory_stats"]["limit"]
-            total_memory_available_gauge.set(total_memory_available)
+            total_cpu_available = int(stats["cpu_stats"]["online_cpus"]) *100
+            total_cpu_available_gauge.set(total_cpu_available)
+        except Exception as e:
+            total_cpu_available_gauge.set(-1)
+        try:
+            total_memory_available_bytes = stats["memory_stats"]["limit"]
+
+            total_memory_available_mb = total_memory_available_bytes / (1024 * 1024)
+            total_memory_available_mb = round(total_memory_available_mb, 2)
+            total_memory_available_gauge.set(total_memory_available_mb)
         except Exception as e:
             total_memory_available_gauge.set(-1)
 
@@ -108,7 +132,7 @@ def start_prometheus_client():
     try:
         while True:
             update_metrics()
-            time.sleep(10)
+            time.sleep(1)
             print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Alive")
     except KeyboardInterrupt:
         print("End prometheus_client")
