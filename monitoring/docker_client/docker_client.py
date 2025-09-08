@@ -11,12 +11,12 @@ client = docker.DockerClient(base_url="tcp://host.docker.internal:2375")
 container_state_gauge = Gauge(
     'docker_container_state',
     'State of Docker containers (1=running, 0=not running)',
-    ['id', 'name', 'status'])
+    ['name'])
 
 container_cpu_used_gauge = Gauge(
     'docker_container_cpu_percent',
     'CPU usage percentage per container',
-    ['id', 'name']
+    ['name']
 )
 total_cpu_used_gauge = Gauge(
     'docker_total_cpu_used_percent',
@@ -30,7 +30,7 @@ total_cpu_available_gauge = Gauge(
 container_memory_used_gauge = Gauge(
     'docker_container_memory_used_mb',
     'Memory usage in megabytes per container',
-    ['id', 'name']
+    ['name']
 )
 total_memory_used_gauge = Gauge(
     'docker_total_memory_used_mb',
@@ -47,8 +47,13 @@ def update_metrics():
 
     # Récupérer l'état du container: 1=Running, 0=Exited
     for c in containers:
-        state = 1 if c.status == "running" else 0
-        container_state_gauge.labels(id=c.short_id, name=c.name, status=c.status).set(state)
+        if c.status == "running":
+            state = 1
+        elif c.status == "created":
+            state = 0.5
+        else:
+            state = 0
+        container_state_gauge.labels(name=c.name).set(state)
 
     # Récupérer la consommation CPU par conteneur
     total_cpu_used = 0.0
@@ -80,13 +85,13 @@ def update_metrics():
                     container_cpu_percent_used = (cpu_delta / system_delta) * cpu_cores * 100.0
                     # arrondis x.xx %
                     container_cpu_percent_used = round(container_cpu_percent_used, 2)
-                    container_cpu_used_gauge.labels(id=c.short_id, name=c.name).set(container_cpu_percent_used)
+                    container_cpu_used_gauge.labels(name=c.name).set(container_cpu_percent_used)
                     total_cpu_used += container_cpu_percent_used
             except Exception as e:
-                container_cpu_used_gauge.labels(id=c.short_id, name=c.name).set(0)
+                container_cpu_used_gauge.labels(name=c.name).set(0)
         else:
-            container_cpu_used_gauge.remove(c.short_id, c.name)
-    total_cpu_used_gauge.set(total_cpu_used)
+            container_cpu_used_gauge.remove(c.name)
+    total_cpu_used_gauge.set(round(total_cpu_used, 2))
 
 
     # Récupérer la consommation mémoire par conteneur
@@ -99,14 +104,14 @@ def update_metrics():
                 container_memory_used_bytes = stats["memory_stats"]["usage"]
                 container_memory_used_mb = container_memory_used_bytes / (1024 * 1024)
                 container_memory_used_mb = round(container_memory_used_mb, 2)
-                container_memory_used_gauge.labels(id=c.short_id, name=c.name).set(container_memory_used_mb)
+                container_memory_used_gauge.labels(name=c.name).set(container_memory_used_mb)
                 total_memory_used += container_memory_used_mb
             except Exception as e:
                 # Si erreur, mettre les metrics à -1
-                container_memory_used_gauge.labels(id=c.short_id, name=c.name).set(-1)
+                container_memory_used_gauge.labels(name=c.name).set(-1)
         else:
-            container_memory_used_gauge.remove(c.short_id, c.name)
-    total_memory_used_gauge.set(total_memory_used)
+            container_memory_used_gauge.remove(c.name)
+    total_memory_used_gauge.set(round(total_memory_used, 2))
 
     # Récupérer la capacité de % de cpu et de mémoire dédiés a Docker
     if containers:
@@ -115,7 +120,7 @@ def update_metrics():
             total_cpu_available = int(stats["cpu_stats"]["online_cpus"]) *100
             total_cpu_available_gauge.set(total_cpu_available)
         except Exception as e:
-            total_cpu_available_gauge.set(-1)
+            pass
         try:
             total_memory_available_bytes = stats["memory_stats"]["limit"]
 
@@ -123,7 +128,7 @@ def update_metrics():
             total_memory_available_mb = round(total_memory_available_mb, 2)
             total_memory_available_gauge.set(total_memory_available_mb)
         except Exception as e:
-            total_memory_available_gauge.set(-1)
+            pass
 
 def start_prometheus_client():
     # Serveur HTTP Prometheus sur le port 8000

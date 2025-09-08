@@ -29,6 +29,7 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     volumes:
       - grafana_data:/var/lib/grafana
+      - ./provisioning:/etc/grafana/provisioning
     restart: unless-stopped
     networks:
       - monitoring_net
