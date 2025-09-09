@@ -29,7 +29,9 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     volumes:
       - grafana_data:/var/lib/grafana
-      - ./grafana_provisioning:/etc/grafana/provisioning
+      - ./grafana_provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana_provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana_provisioning/notifiers/grafana.ini:/etc/grafana/grafana.ini
     restart: unless-stopped
     networks:
       - monitoring_net
@@ -39,4 +41,6 @@ volumes:
 
 networks:
   monitoring_net:
+    external: true
+    name: postgres_streaming_default
 
