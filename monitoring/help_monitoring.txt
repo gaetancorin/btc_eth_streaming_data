@@ -24,7 +24,7 @@ TUTORIEL PREMIER FONCTIONNEMENT
 Redemarrer Docker desktop
 
 (Cadvisor ne fonctionne pas a cause de WSL)
-- docker_client doit affiché les données:
+- docker_exporter doit affiché les données:
 http://localhost:8000/metrics
 
 -Prometheus doit affiché la connexion avec docker_client en "Up"

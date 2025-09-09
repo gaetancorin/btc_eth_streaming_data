@@ -3,9 +3,9 @@ import docker
 import time
 from datetime import datetime
 
-# Connexion au daemon Docker via TCP sur Windows (Local)
+# Connexion au daemon Docker via TCP sur Windows (dans container)
 client = docker.DockerClient(base_url="tcp://host.docker.internal:2375")
-# Connexion au daemon Docker via TCP sur Windows (Dans container)
+# Connexion au daemon Docker via TCP sur Windows (python en local)
 # client = docker.DockerClient(base_url="tcp://localhost:2375")
 
 container_state_gauge = Gauge(

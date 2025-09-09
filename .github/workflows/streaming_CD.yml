@@ -19,25 +19,31 @@ jobs:
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
 
-      # 1. Postgres
+      # Monitoring
+      - name: Start Monitoring
+        run: |
+          cd monitoring
+          docker compose -p monitoring_streaming up -d --build
+
+      # Postgres
       - name: Start Postgres
         run: |
           cd postgres
           docker compose -p postgres_streaming up -d --build
 
-      # 2. Spark
+      # Spark
       - name: Start Spark
         run: |
           cd spark
           docker compose -p spark_streaming up -d --build
 
-      # 3. Mailhog
+      # Mailhog
       - name: Start Mailhog
         run: |
           cd mailhog
           docker compose -p mailhog_streaming up -d --build
 
-      # 4. Airflow
+      # Airflow
       - name: Start Airflow
         run: |
           cd airflow
@@ -64,7 +70,7 @@ jobs:
           docker compose -p airflow_streaming build
           docker compose -p airflow_streaming up -d
 
-      # 5. Ingestion
+      # Ingestion
       - name: Start Ingestion
         run: |
           cd ingestion

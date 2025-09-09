@@ -1,7 +1,7 @@
 services:
-  docker_client:
-    build: ./docker_client
-    container_name: docker_client
+  docker_exporter:
+    build: ./docker_exporter
+    container_name: docker_exporter
     ports:
       - "8000:8000"
     restart: unless-stopped
@@ -29,7 +29,7 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     volumes:
       - grafana_data:/var/lib/grafana
-      - ./provisioning:/etc/grafana/provisioning
+      - ./grafana_provisioning:/etc/grafana/provisioning
     restart: unless-stopped
     networks:
       - monitoring_net
