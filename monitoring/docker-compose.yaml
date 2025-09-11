@@ -30,6 +30,7 @@ services:
       - grafana_data:/var/lib/grafana
       - ./grafana_provisioning/datasources:/etc/grafana/provisioning/datasources
       - ./grafana_provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana_provisioning/alerting:/etc/grafana/provisioning/alerting
     restart: unless-stopped
     networks:
       - monitoring_net
