@@ -4,6 +4,8 @@ docker exec -it airflow_streaming-airflow-worker-1 python -c "import os; [print(
 -- Ingestion --
 docker exec -it ingestion_streaming python -c "from dotenv import load_dotenv; import os; load_dotenv(); [print(f'{k}={v}') for k,v in os.environ.items()]"
 
+Récupérer l'arborescence:
+tree /A /F > arborescence.txt
 ------------------------------------
 
 DROP TABLE IF EXISTS btc_eth_gap_avg_3m_indicator;

@@ -3,8 +3,8 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import os
 
-smtp_user = os.getenv("SMTP_USER") # sender email
-smtp_pass = os.getenv("SMTP_PASS") # sender password application
+smtp_user = os.getenv("SMTP_USER") # sender email (prod only, with gmail)
+smtp_pass = os.getenv("SMTP_PASS") # sender password application (prod only, with gmail)
 
 smtp_server = os.getenv("SMTP_SERVER") # receiver SMTP server
 smtp_port = int(os.getenv("SMTP_PORT")) # receiver SMTP port (587=TLS, 465=SSL, 25=not secure)
@@ -42,6 +42,10 @@ def test_email_sending():
     with smtplib.SMTP(smtp_server, smtp_port) as server:
         if smtp_port == 587:
             server.starttls()  # securise TLS
-        server.login(smtp_user, smtp_pass)
-        server.sendmail(sender, receiver, msg.as_string())
+        if smtp_user and smtp_pass:
+            server.login(smtp_user, smtp_pass)
+            server.sendmail(sender, receiver, msg.as_string())
+        # when testing with mailhog, no need to connect sender (user password)
+        else:
+            server.sendmail(receiver, receiver, msg.as_string())
     print("✅ Email send successfully at", receiver)
