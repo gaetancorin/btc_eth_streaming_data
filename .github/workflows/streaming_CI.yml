@@ -20,6 +20,15 @@ jobs:
       - name: Start Monitoring
         run: |
           cd monitoring
+          
+          # Generate a temporary .env file
+          echo "GF_SECURITY_ADMIN_USER=${{ secrets.GF_SECURITY_ADMIN_USER }}" >> .env
+          echo "GF_SECURITY_ADMIN_PASSWORD=${{ secrets.GF_SECURITY_ADMIN_PASSWORD }}" >> .env
+          echo "GF_SMTP_ENABLED=${{ vars.GF_SMTP_ENABLED }}" >> .env
+          echo "GF_SMTP_HOST=${{ vars.GF_SMTP_HOST }}" >> .env
+          echo "GF_SMTP_FROM_NAME=${{ vars.GF_SMTP_FROM_NAME }}" >> .env
+          echo "RECEIVER=${{ secrets.RECEIVER }}" >> .env
+          
           docker compose -p monitoring_streaming up -d --build
 
       # Postgres
