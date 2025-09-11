@@ -39,7 +39,8 @@ jobs:
           "GF_SMTP_FROM_NAME=${{ vars.GF_SMTP_FROM_NAME }}" | Out-File -FilePath $envFile -Append -Encoding utf8
           "RECEIVER=${{ secrets.RECEIVER }}" | Out-File -FilePath $envFile -Append -Encoding utf8     
           
-          docker compose -p monitoring_streaming up -d --build
+          docker compose -p monitoring_streaming build
+          docker compose -p monitoring_streaming up -d
 
       # Spark
       - name: Start Spark
