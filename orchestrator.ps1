@@ -2,14 +2,14 @@
 
 Write-Output "GO CREATE ALL CONTAINERS FOR PROJECT !"
 
-# Monitoring (Python ->Prometheus->Grafana)
-cd monitoring
-docker-compose -p monitoring_streaming up -d --build
-cd ..
-
 # Postgres -> create postgres_streaming_default network
 cd postgres
 docker-compose -p postgres_streaming up -d --build
+cd ..
+
+# Monitoring (Python ->Prometheus->Grafana)
+cd monitoring
+docker-compose -p monitoring_streaming up -d --build
 cd ..
 
 # Spark

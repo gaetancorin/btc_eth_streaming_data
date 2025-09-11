@@ -16,6 +16,12 @@ jobs:
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
 
+      # Postgres
+      - name: Start Postgres
+        run: |
+          cd postgres
+          docker compose -p postgres_streaming up -d --build
+
       # Monitoring
       - name: Start Monitoring
         run: |
@@ -30,12 +36,6 @@ jobs:
           echo "RECEIVER=${{ secrets.RECEIVER }}" >> .env
           
           docker compose -p monitoring_streaming up -d --build
-
-      # Postgres
-      - name: Start Postgres
-        run: |
-          cd postgres
-          docker compose -p postgres_streaming up -d --build
 
       # Spark
       - name: Start Spark
