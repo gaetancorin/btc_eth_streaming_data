@@ -12,7 +12,7 @@ arreter le docker compose:
 docker-compose -p postgres_streaming stop
 
 supprimer le docker compose et docker associés:
-docker-compose -p postgres_streaming down
+docker-compose -p postgres_streaming down -v
 
 recréer le docker compose:
 docker-compose -p postgres_streaming down
