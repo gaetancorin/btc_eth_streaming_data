@@ -23,7 +23,17 @@ jobs:
       - name: Start Postgres
         run: |
           cd postgres
-          docker compose -p postgres_streaming up -d --build
+          
+          # Generate a temporary .env file
+          $envFile = ".env"
+          "POSTGRES_EXTERNAL_USER=${{ secrets.POSTGRES_EXTERNAL_USER }}" | Out-File -FilePath $envFile -Encoding utf8
+          "POSTGRES_EXTERNAL_PASSWORD=${{ secrets.POSTGRES_EXTERNAL_PASSWORD }}" | Out-File -FilePath $envFile -Append -Encoding utf8
+          "POSTGRES_EXTERNAL_DB=${{ vars.POSTGRES_EXTERNAL_DB }}" | Out-File -FilePath $envFile -Append -Encoding utf8
+          "PGADMIN_DEFAULT_EMAIL=${{ secrets.PGADMIN_DEFAULT_EMAIL }}" | Out-File -FilePath $envFile -Append -Encoding utf8
+          "PGADMIN_DEFAULT_PASSWORD=${{ secrets.PGADMIN_DEFAULT_PASSWORD }}" | Out-File -FilePath $envFile -Append -Encoding utf8
+
+          docker compose -p postgres_streaming build
+          docker compose -p postgres_streaming up -d
 
       # Mailhog
       - name: Start Mailhog
@@ -93,6 +103,11 @@ jobs:
           "PG_DBNAME=${{ vars.PG_DBNAME }}" | Out-File -FilePath $envFile -Append -Encoding utf8
           "PG_USER=${{ vars.PG_USER }}" | Out-File -FilePath $envFile -Append -Encoding utf8
           "PG_PASSWORD=${{ secrets.PG_PASSWORD }}" | Out-File -FilePath $envFile -Append -Encoding utf8
+          "SMTP_USER=${{ secrets.SMTP_USER }}" | Out-File -FilePath $envFile -Append -Encoding utf8
+          "SMTP_PASS=${{ secrets.SMTP_PASS }}" | Out-File -FilePath $envFile -Append -Encoding utf8
+          "SMTP_SERVER=${{ vars.SMTP_SERVER }}" | Out-File -FilePath $envFile -Append -Encoding utf8
+          "SMTP_PORT=${{ vars.SMTP_PORT }}" | Out-File -FilePath $envFile -Append -Encoding utf8
+          "RECEIVER=${{ vars.RECEIVER }}" | Out-File -FilePath $envFile -Append -Encoding utf8
           
           docker build -t ingestion_streaming .
           docker run -d --name ingestion_streaming --network postgres_streaming_default --env-file .env ingestion_streaming

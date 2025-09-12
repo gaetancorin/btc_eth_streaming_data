@@ -20,6 +20,14 @@ jobs:
       - name: Start Postgres
         run: |
           cd postgres
+          
+          # Generate a temporary .env file
+          echo "POSTGRES_EXTERNAL_USER=${{ secrets.POSTGRES_EXTERNAL_USER }}" >> .env
+          echo "POSTGRES_EXTERNAL_PASSWORD=${{ secrets.POSTGRES_EXTERNAL_PASSWORD }}" >> .env
+          echo "POSTGRES_EXTERNAL_DB=${{ vars.POSTGRES_EXTERNAL_DB }}" >> .env
+          echo "PGADMIN_DEFAULT_EMAIL=${{ secrets.PGADMIN_DEFAULT_EMAIL }}" >> .env
+          echo "PGADMIN_DEFAULT_PASSWORD=${{ secrets.PGADMIN_DEFAULT_PASSWORD }}" >> .env
+          
           docker compose -p postgres_streaming up -d --build
 
       # Mailhog
@@ -85,6 +93,11 @@ jobs:
           echo "PG_DBNAME=${{ vars.PG_DBNAME }}" >> .env
           echo "PG_USER=${{ vars.PG_USER }}" >> .env
           echo "PG_PASSWORD=${{ secrets.PG_PASSWORD }}" >> .env
+          echo "SMTP_USER=${{ secrets.SMTP_USER }}" >> .env
+          echo "SMTP_PASS=${{ secrets.SMTP_PASS }}" >> .env
+          echo "SMTP_SERVER=${{ vars.SMTP_SERVER }}" >> .env
+          echo "SMTP_PORT=${{ vars.SMTP_PORT }}" >> .env
+          echo "RECEIVER=${{ vars.RECEIVER }}" >> .env
 
           docker build -t ingestion_streaming .
           docker run -d --name ingestion_streaming --network postgres_streaming_default --env-file .env ingestion_streaming
