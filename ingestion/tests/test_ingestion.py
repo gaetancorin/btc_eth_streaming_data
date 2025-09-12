@@ -43,11 +43,11 @@ def test_handle_message_duplicate_ignored(monkeypatch):
     dummy_pg = DummyPostgres()
     monkeypatch.setattr(btc_eth_ws_listener, "postgres_manager", dummy_pg)
 
-    # Pré-remplir last_data pour simuler un doublon récent (<30s)
+    # Pré-remplir la variable last_data pour simuler un input récent
     now = datetime.now(timezone.utc)
     btc_eth_ws_listener.last_data.clear()
     btc_eth_ws_listener.last_data["btc_usd"] = now
-
+    # Injecter une donnée de <30s de differences
     msg = {"id": "BTC-USD", "price": 26000}
     btc_eth_ws_listener.handle_message(msg)
 

@@ -23,7 +23,8 @@ def handle_message(msg):
             result = postgres_manager.write_on_db(table_name=id, price=price, date=date)
             if not result:
                 print("COULD NOT save data in PostgreSQL, so save data in CSV")
-                utils.save_waiting_data_into_csv(table_name = id, price = price, date = date)
+                utils.save_waiting_data_into_csv(table_name=id, price=price, date=date)
+                utils.send_mail_alert_if_two_rows(table_name=id)
         else:
             print(f"Not Inserted: Duplicate value for {id} in the same minute.")
 
