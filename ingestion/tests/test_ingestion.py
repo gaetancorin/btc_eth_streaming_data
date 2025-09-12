@@ -1,6 +1,7 @@
 # from ingestion import btc_eth_ws_listener
 import btc_eth_ws_listener as btc_eth_ws_listener
 from postgres_manager import PostgresManager
+import utils as utils
 from datetime import datetime, timezone
 import os, shutil
 
@@ -94,3 +95,8 @@ def test_try_to_connect_real_db(monkeypatch):
     assert postgres_manager.connect != None
     # Verifie que la connexion est bonne
     assert postgres_manager.connect.closed == 0
+
+def test_send_email_alert():
+    result = utils.email_sender("pytest")
+    # Verifie que le mail est envoyé
+    assert result == True

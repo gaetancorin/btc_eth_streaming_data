@@ -34,37 +34,43 @@ def send_mail_alert_if_two_rows(table_name):
     row_count = len(pd.read_csv(filepath, header=None))
     print(f"CSV Data {table_name} Rows count :", row_count)
     if row_count == 2:
+        print("Send email alert")
         email_sender(table_name)
 
 
 def email_sender(table_name):
-    sender = smtp_user
+    try:
+        sender = smtp_user
 
-    # Create message
-    msg = MIMEMultipart("alternative")
-    msg["From"] = sender
-    msg["To"] = receiver
-    msg["Subject"] = f"🚒 Data Ingestion Failure {table_name.upper()}🚒"
-    body = f"""\
-        <html>
-          <body>
-            <p>😭 Data Ingestion failed 😭<br><br>
-            The new data for the <b>{table_name.upper()}</b> Postgres table could not be ingested at 
-            {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')}.<br><br>
-            It has been saved to a CSV file and will be loaded into the table once the Postgres issue is resolved.
-            </p>
-          </body>
-        </html>
-        """
-    msg.attach(MIMEText(body, "html"))
+        # Create message
+        msg = MIMEMultipart("alternative")
+        msg["From"] = sender
+        msg["To"] = receiver
+        msg["Subject"] = f"🚒 Data Ingestion Failure {table_name.upper()}🚒"
+        body = f"""\
+            <html>
+              <body>
+                <p>😭 Data Ingestion failed 😭<br><br>
+                The new data for the <b>{table_name.upper()}</b> Postgres table could not be ingested at 
+                {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')}.<br><br>
+                It has been saved to a CSV file and will be loaded into the table once the Postgres issue is resolved.
+                </p>
+              </body>
+            </html>
+            """
+        msg.attach(MIMEText(body, "html"))
 
-    with smtplib.SMTP(smtp_server, smtp_port) as server:
-        if smtp_port == 587:
-            server.starttls()  # securise TLS
-        if smtp_user and smtp_pass:
-            server.login(smtp_user, smtp_pass)
-            server.sendmail(sender, receiver, msg.as_string())
-        # when testing with mailhog, no need to connect sender (user password)
-        else:
-            server.sendmail(receiver, receiver, msg.as_string())
-    print("✅ Send Email alert successfully at", receiver)
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
+            if smtp_port == 587:
+                server.starttls()  # securise TLS
+            if smtp_user and smtp_pass:
+                server.login(smtp_user, smtp_pass)
+                server.sendmail(sender, receiver, msg.as_string())
+            # when testing with mailhog, no need to connect sender (user password)
+            else:
+                server.sendmail(receiver, receiver, msg.as_string())
+        print("✅ Send Email alert successfully at", receiver)
+        return True
+    except Exception as e:
+        print(f"❌  FAIL TO SEND EMAIL ALERT : {e}")
+        return False
