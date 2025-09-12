@@ -35,11 +35,11 @@ jobs:
           docker compose -p postgres_streaming build
           docker compose -p postgres_streaming up -d
 
-      # Mailhog
-      - name: Start Mailhog
-        run: |
-          cd mailhog
-          docker compose -p mailhog_streaming up -d --build
+      ## Mailhog
+      #- name: Start Mailhog
+      #  run: |
+      #    cd mailhog
+      #    docker compose -p mailhog_streaming up -d --build
 
       # Monitoring
       - name: Start Monitoring
