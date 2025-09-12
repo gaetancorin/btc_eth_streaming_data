@@ -11,7 +11,7 @@ jobs:
     # seulement si Streaming CI est success
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: self-hosted
-    environment: prod
+    environment: dev
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -46,13 +46,11 @@ jobs:
         run: |
           cd monitoring
           
-          # Generate a temporary .env file (add gf_smtp_user and gf_smtp_password when prod)
+          # Generate a temporary .env file
           $envFile = ".env"
           "GF_SECURITY_ADMIN_USER=${{ secrets.GF_SECURITY_ADMIN_USER }}" | Out-File -FilePath $envFile -Encoding utf8
           "GF_SECURITY_ADMIN_PASSWORD=${{ secrets.GF_SECURITY_ADMIN_PASSWORD }}" | Out-File -FilePath $envFile -Append -Encoding utf8
           "GF_SMTP_ENABLED=${{ vars.GF_SMTP_ENABLED }}" | Out-File -FilePath $envFile -Append -Encoding utf8
-          "GF_SMTP_USER=${{ secrets.GF_SMTP_USER }}" | Out-File -FilePath $envFile -Append -Encoding utf8
-          "GF_SMTP_PASSWORD=${{ secrets.GF_SMTP_PASSWORD }}" | Out-File -FilePath $envFile -Append -Encoding utf8
           "GF_SMTP_HOST=${{ vars.GF_SMTP_HOST }}" | Out-File -FilePath $envFile -Append -Encoding utf8
           "GF_SMTP_FROM_NAME=${{ vars.GF_SMTP_FROM_NAME }}" | Out-File -FilePath $envFile -Append -Encoding utf8
           "RECEIVER=${{ secrets.RECEIVER }}" | Out-File -FilePath $envFile -Append -Encoding utf8     
