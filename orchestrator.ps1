@@ -7,6 +7,11 @@ cd postgres
 docker-compose -p postgres_streaming up -d --build
 cd ..
 
+# Mailhog
+cd mailhog
+docker-compose -p mailhog_streaming up -d --build
+cd ..
+
 # Monitoring (Python ->Prometheus->Grafana)
 cd monitoring
 docker-compose -p monitoring_streaming up -d --build
@@ -15,11 +20,6 @@ cd ..
 # Spark
 cd spark
 docker-compose -p spark_streaming up -d --build
-cd ..
-
-# Mailhog
-cd mailhog
-docker-compose -p mailhog_streaming up -d --build
 cd ..
 
 # Airflow

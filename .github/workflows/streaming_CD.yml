@@ -25,6 +25,12 @@ jobs:
           cd postgres
           docker compose -p postgres_streaming up -d --build
 
+      # Mailhog
+      - name: Start Mailhog
+        run: |
+          cd mailhog
+          docker compose -p mailhog_streaming up -d --build
+
       # Monitoring
       - name: Start Monitoring
         run: |
@@ -47,12 +53,6 @@ jobs:
         run: |
           cd spark
           docker compose -p spark_streaming up -d --build
-
-      # Mailhog
-      - name: Start Mailhog
-        run: |
-          cd mailhog
-          docker compose -p mailhog_streaming up -d --build
 
       # Airflow
       - name: Start Airflow
