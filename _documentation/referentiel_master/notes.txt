@@ -1,0 +1,30 @@
+---- Cadre du travail de conception et deployement ---
+Entreprise de trading de cryptomonnaie qui a besoin d'un logiciel interne de récupération de cours des cryptomonnaies, ainsi que de création des indicateurs techniques.
+Le logiciel devra récupéré les cours des plus grandes cryptomonnaies en temps réel, puis en créer des indicateurs techniques.
+La créations de ces indicateurs techniques demanderont pour certains de grandes puissance de calculs, et pour d'autres de petites puissances de calculs.
+L'enjeux de ce projet est que l'architecture doit pouvoir être facilement déployable, facilement monitorer et avoir différents systèmes d'alertes lors de problèmes.
+Le budget étant limité, l'objectif étant d'avoir une architecture et infrastructure fonctionnelle. Il n'y a actuellement pas d'existant au sein de l'entreprise.
+Un data engineer interne a l'entreprise pourra ensuite prendre la relève pour réalisé les différentes taches de maintenance, et éventuellement d'ajout de nouvelles features.
+
+
+---- Redac A faire ----
+4.3.2: Feuille de route
+Les taches a réaliser de manière quotidienne, hebdomadaire
+Les echeances (monter en versions tout les 3 mois)
+planification de maintenance
+point de vigilence
+
+
+4.3.3: Documentation technique
+
+4.4.1: Cahier des recettes
+
+---- Point Diapo ----
+4.1.1: Besoin, enjeux, environnement, contraintes
+
+4.1.2: Choix des composants et technologies
+Leurs avantages, points de vigilences, estimations des couts
+
+4.2.1 Schéma des données, qui y accède, organisations
+
+4.4.2 Expliquer incident de la monté version Spark, actions a mettre en place, communications, les résultats, prevention (ecrire version en brut dans requirements et planifier échéances de monter de version 1 fois tout les 3 mois)

@@ -1,4 +1,11 @@
--------------- AIDE DOCKER COMPOSE POSTGRE ---------------
+----- BACKUP ------
+Créer le dump de postgres: (crer le dump en local du container et copie du container a windows
+docker exec -t postgres_external pg_dump -U admin -d crypto_db -Fc -f /tmp/backup.dump ; docker cp postgres_external:/tmp/backup.dump .\backup.dump
+
+Restaurer le dump de postgres: (copie du windows au container et restaure)
+docker cp .\backup.dump postgres_external:/tmp/backup.dump ; docker exec -it postgres_external pg_restore -U admin -d crypto_db /tmp/backup.dump
+
+  -------------- AIDE DOCKER COMPOSE POSTGRE ---------------
 construire le docker compose:
 docker-compose -p postgres_streaming up -d
 
@@ -12,7 +19,7 @@ arreter le docker compose:
 docker-compose -p postgres_streaming stop
 
 supprimer le docker compose et docker associés:
-docker-compose -p postgres_streaming down
+docker-compose -p postgres_streaming down -v
 
 recréer le docker compose:
 docker-compose -p postgres_streaming down
