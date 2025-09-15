@@ -1,4 +1,4 @@
-Voir les variables d'environnements dans les containers:
+Voir les variables d'environnements dans les containers:.
 -- Airflow --
 docker exec -it airflow_streaming-airflow-worker-1 python -c "import os; [print(f'{k}={v}') for k,v in os.environ.items()]"
 -- Ingestion --
