@@ -1,0 +1,37 @@
+ARCHITECTURE DIAPORAMA:
+* Présentation
+Qui je suis
+* Sommaire
+Le sommaire
+* Rapport d'analyse
+Presentation entreprise, leur souhait de projet, le budget
+* Composants de l'architecture
+
+
+(a faire rentrer:
+-CI/CD (+explication documentation)
+-Supervision (python/prometheus/grafana, email ingestion + airflow)
+-Feuille de route exploitation(taches a faire constant, journalier, mensuel, etc) et points de vigilance (dépendance Yfinance+cpus et mémoire 19 containeurs)
+- Documentation technique (schéma architectural, MCD MLD, explication de chaque service)
+- Cahier de recettes et de tests (test a présenter)
+- Présentation d'un incident(action mise en place, communication des parties, résultat, prévention)
+- Proposition d'évolution (passer de Postgres a Snowflake lorsque les budgets de maintenance seront plus important)
+ 
+
+POINTS DE REFLEXION:
+4.1.1:
+Entreprise de trading de cryptomonnaie
+Projet de création intégrale, avec faible budget de création et de maintenance.(budget ?)
+Qui veut des données BTC et ETH avec des indicateurs techniques personnalisés
+Certains indicateurs techniques sont réalisés avec des calculs simple, d'autres avec des calculs avancés.
+Serveur Windows disponible dans l'entreprise.
+Logiciel Facilement déployable (un Data-Engineer en interne pour la maintenance/évolution du projet)
+Le plus important: Créer l'architecture global du système et de sa résilience pour permettre au Data-Engineer en interne de rajouter des données/des indicateurs suivant les besoins de manière simple
+
+4.1.2:
+- Explication projet 100% dockerisable avec CI/CD
+- Tout local, pas de cloud pour limiter le budget (avec possibilité d'évolution futur cloud)
+- Source de données gratuite Yfinance pour les données d'ingestion en récupération Websocket (temps réel)
+- Affichage du schéma d'architecture
+- Estimation des coûts(développement, entretien)
+
