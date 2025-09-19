@@ -57,8 +57,8 @@ def spark_btc_eth_gap_avg_5m_indicator():
             logging.error("MISSING BTC or ETH DATA TO PROCESS")
             return None
         # --- Merge BTC and ETH at the same datetime ---
-        btc_df = btc_df[["price", "datetime_utc"]].rename(columns={"price": "btc_price"})
-        eth_df = eth_df[["price", "datetime_utc"]].rename(columns={"price": "eth_price"})
+        btc_df = btc_df[["id", "price", "datetime_utc"]].rename(columns={"id": "btc_id", "price": "btc_price"})
+        eth_df = eth_df[["id", "price", "datetime_utc"]].rename(columns={"id": "eth_id", "price": "eth_price"})
         btc_eth_merged = pd.merge(btc_df, eth_df, on="datetime_utc", how="inner")
         logging.info(f"BTC_ETH_MERGED\n{btc_eth_merged}")
         if btc_eth_merged.empty:
@@ -108,9 +108,8 @@ def spark_btc_eth_gap_avg_5m_indicator():
         last_row_with_avg.show(truncate=False)
 
         df_last_row_with_avg = last_row_with_avg.toPandas()
-        df_last_row_with_avg = df_last_row_with_avg[["avg_gap_btc_eth_5m", "datetime_utc"]]
-        logging.info(f"Transform into pandas and keep only AVG of BTC-ETH GAP 5 and datetime columns")
-        logging.info(df_last_row_with_avg)
+        df_last_row_with_avg = df_last_row_with_avg[["avg_gap_btc_eth_5m", "datetime_utc", "btc_id", "eth_id"]]
+        logging.info(f"Transform into pandas and keep only AVG of BTC-ETH GAP 5, datetime and ids columns :\n{df_last_row_with_avg}")
 
         spark.stop()
         return df_last_row_with_avg
@@ -128,10 +127,10 @@ def spark_btc_eth_gap_avg_5m_indicator():
         # --- Load Pandas row into Postgres  ---
         for _, row in df_last_row_with_avg.iterrows():
             cur.execute("""
-                        INSERT INTO btc_eth_gap_avg_5m_indicator(btc_eth_gap_avg_5m, datetime_utc)
-                        VALUES (%s, %s)
+                        INSERT INTO btc_eth_gap_avg_5m_indicator(btc_eth_gap_avg_5m, datetime_utc, btc_usd_id, eth_usd_id)
+                        VALUES (%s, %s, %s, %s)
                         ON CONFLICT (datetime_utc) DO NOTHING;
-                    """, (row["avg_gap_btc_eth_5m"],  row["datetime_utc"]))
+                    """, (row["avg_gap_btc_eth_5m"], row["datetime_utc"], row["btc_id"], row["eth_id"]))
         pg_conn.commit()
         cur.close()
         pg_conn.close()

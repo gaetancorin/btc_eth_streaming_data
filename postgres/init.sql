@@ -29,5 +29,7 @@ CREATE TABLE IF NOT EXISTS eth_usd_avg_indicator (
 CREATE TABLE IF NOT EXISTS btc_eth_gap_avg_5m_indicator (
     id SERIAL PRIMARY KEY,
     btc_eth_gap_avg_5m NUMERIC(15,4),
-    datetime_utc TIMESTAMPTZ(0) NOT NULL UNIQUE
+    datetime_utc TIMESTAMPTZ(0) NOT NULL UNIQUE,
+    btc_usd_id INT NOT NULL REFERENCES btc_usd(id),
+    eth_usd_id INT NOT NULL REFERENCES eth_usd(id)
 );
