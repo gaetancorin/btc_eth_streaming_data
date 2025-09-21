@@ -52,18 +52,3 @@ http://localhost:8080/
 se connecter avec
 airflow
 airflow
-
-si ca lag, ne conserver en fonctionnement que ces containers
-airflow-airflow-apiserver-1
-airflow-airflow-scheduler-1
-airflow-postgres-1
-airflow-redis-1
-
-pour un rafraichissement automatique des dags, ajouter ce container (1refrsh/min)
-airflow-dag-processor
-pour faire tourner un dag, ajouter ce container
-airflow-worker
-
-un changement ? Redamarrer certains containers
-docker-compose -p airflow_streaming restart airflow-worker airflow-dag-processor airflow-apiserver airflow-scheduler postgres redis
-
