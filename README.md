@@ -1,12 +1,14 @@
 # BTC & ETH Streaming Data
 
-This project streams BTC/USD and ETH/USD data in real-time using a websocket-based ingestion system built with the Yfinance library.
+This project streams BTC/USD and ETH/USD data in real-time via a Python websocket ingestion system using the Yfinance library.
 
 The collected data is stored in **PostgreSQL**, while **Airflow** orchestrates the computation of technical indicators on a **Spark** cluster.
 
-Monitoring is handled with **Python**, **Prometheus**, and **Grafana**, and an **email alert system** ensures notifications for the ingestion pipeline, Airflow workflows, and Grafana dashboards.
+Monitoring is handled with **Python**, **Prometheus**, and **Grafana**, 
 
-The **CI/CD** pipeline with GitHub Actions builds containers and runs unit tests on every commit. Emails are sent to Mailhog in development and to Gmail in production.
+An **email alert system** ensures notifications regarding potential problems on the ingestion pipeline, Airflow workflows or Grafana dashboards.
+
+The GitHub Actions **CI/CD pipeline** builds containers, runs unit tests on every commit, and routes emails to Mailhog in development or Gmail in production
 
 ### Tech Stack
 - **Python**
@@ -18,16 +20,35 @@ The **CI/CD** pipeline with GitHub Actions builds containers and runs unit tests
 - **Mailhog**
 - **Github Action**
 
-### Architecture
+### Global Architecture
 ![Global Architecture](./_documentation/global_architecture.png)
 
 ### Data pipelines
-There is two data pipeline into this project.
+There are two data pipelines in this project.
 
-- The first is BTC/USD and ETH/USD data
+- The first pipeline handles BTC/USD and ETH/USD data. Data extraction and storage are performed in **real-time using Python websockets**. Technical indicators are processed through **Airflow DAGs**, and when necessary, computations are executed on a **Spark cluster**.
 
 ![Pipeline Data](./_documentation/pipeline_data.png)
 
-- The second is monitoring data
+- The second pipeline handles monitoring of Docker containers. A Python script collects container status, CPU usage, and memory metrics from Docker running on WSL, and exposes this data for Prometheus storage. Grafana then visualizes the metrics in interactive dashboards, with a 30-second delay between an event and its display.
 
 ![Pipeline Monitoring](./_documentation/pipeline_monitoring.png)
+
+### Grafana Monitoring Results:
+![Grafana Monitoring](./_documentation/monitoring_grafana.png)
+### Calculated technical indicators results:
+**ETH/USD 3/5-Minute Moving Average**: Computes the moving average of ETH/USD prices over 3 or 5 minutes.
+![Eth Usd Moving Average](./_documentation/eth_usd_mm_result.png)
+**BTC/ETH 5-Minute Gap Average**: Calculates the price difference between BTC and ETH every minute, then computes a rolling average over 5 minutes.
+![Btc Eth Gap Average](./_documentation/btc_eth_gap_avg_result.png)
+
+# Getting Started
+
+This project is designed as a proof of concept to showcase my data engineering skills. To run it:
+
+1. **Clone the repository**  
+   ```
+   git clone https://github.com/gaetancorin/btc_eth_streaming_data.git
+   ```
+
+2. In Progress...
