@@ -51,4 +51,5 @@ This project is designed as a proof of concept to showcase my data engineering s
    git clone https://github.com/gaetancorin/btc_eth_streaming_data.git
    ```
 
-2. In Progress...
+2. **Create the .env files:**
+- Into **ingestion** folder:
