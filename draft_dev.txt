@@ -7,6 +7,7 @@ docker exec -it ingestion_streaming python -c "from dotenv import load_dotenv; i
 Récupérer l'arborescence:
 tree /A /F > arborescence.txt
 ------------------------------------
+SQL TABLES:
 
 DROP TABLE IF EXISTS btc_eth_gap_avg_3m_indicator;
 DROP TABLE IF EXISTS btc_eth_gap_avg_5m_indicator;
@@ -63,10 +64,6 @@ Je t'explique mon système
 
 J'ai donc un fichier python pour l'ingestion, un docker compose pour postres+pgadmin, un docker compose pour airflow3, un docker compose pour un master spark + 2 workers.
 
-J'ai réussi a connecter airflow avec postgres et airflow avec spark master.
-Tu as tout compris ?
-
-
 -------------------
 Voici l'architecture de mon projet:
 Architecture:
@@ -87,7 +84,6 @@ Architecture:
     (docker-compose -p spark_streaming up --build -d)
 
 L'objectif est de lancé tout cela avec github action.
-L'ordre est important car ils partage tous le meme network de postgres.doit être
-L'ordre de création des containers doit être postgres, spark, mailhog, ingestion, airflow
+L'ordre de création des containers doit être postgres, mailhog, monitoring, spark, airflow, ingestion
 
 https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/control-deployments
