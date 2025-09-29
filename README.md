@@ -34,13 +34,36 @@ There are two data pipelines in this project.
 
 ![Pipeline Monitoring](./_documentation/pipeline_monitoring.png)
 
-### Grafana Monitoring Results:
-![Grafana Monitoring](./_documentation/monitoring_grafana.png)
+### CI/CD (Continuous Integration / Continuous Deployment)
+
+This project uses two GitHub Actions workflows for CI/CD:
+
+#### Continuous Integration (CI) – [`streaming-CI.yml`](.github\workflows\streaming_CI.yml)
+- Runs on **GitHub-hosted servers**  
+- Builds the Docker containers  
+- Executes all unit tests  
+- Sends monitoring and alert emails to **Mailhog** to avoid spamming the production inbox  
+- If all steps succeed, the workflow triggers the CD workflow  
+
+#### Continuous Deployment (CD) – [`streaming-CD.yml`](.github\workflows\streaming_CD.yml)
+- Runs on a **self-hosted Windows WSL runner**  
+- Builds the containers again to ensure consistency  
+- Deploys the project to the target environment  
+- Sends monitoring and alert emails to **Gmail** in production  
+
+This setup ensures that code is always tested before deployment, deployment happens in a controlled environment, and production emails are not polluted by development notifications.
+
+![CI CD](./_documentation/schema_ci_cd_2.png)
+
+# Results:
 ### Calculated technical indicators results:
 **ETH/USD 3/5-Minute Moving Average**: Computes the moving average of ETH/USD prices over 3 or 5 minutes.
 ![Eth Usd Moving Average](./_documentation/eth_usd_mm_result.png)
 **BTC/ETH 5-Minute Gap Average**: Calculates the price difference between BTC and ETH every minute, then computes a rolling average over 5 minutes.
 ![Btc Eth Gap Average](./_documentation/btc_eth_gap_avg_result.png)
+
+### Grafana Monitoring Results:
+![Grafana Monitoring](./_documentation/monitoring_grafana.png)
 
 # Getting Started
 
