@@ -38,14 +38,14 @@ There are two data pipelines in this project.
 
 This project uses two GitHub Actions workflows for CI/CD:
 
-#### Continuous Integration (CI) – [`streaming-CI.yml`](.github\workflows\streaming_CI.yml)
+#### Continuous Integration (CI) – [`streaming-CI.yml`](.github/workflows/streaming_CI.yml)
 - Runs on **GitHub-hosted servers**  
 - Builds the Docker containers  
 - Executes all unit tests  
 - Sends monitoring and alert emails to **Mailhog** to avoid spamming the production inbox  
 - If all steps succeed, the workflow triggers the CD workflow  
 
-#### Continuous Deployment (CD) – [`streaming-CD.yml`](.github\workflows\streaming_CD.yml)
+#### Continuous Deployment (CD) – [`streaming-CD.yml`](.github/workflows/streaming_CD.yml)
 - Runs on a **self-hosted Windows WSL runner**  
 - Builds the containers again to ensure consistency  
 - Deploys the project to the target environment  
@@ -67,12 +67,45 @@ This setup ensures that code is always tested before deployment, deployment happ
 
 # Getting Started
 
-This project is designed as a proof of concept to showcase my data engineering skills. To run it:
+This project is designed as a proof of concept to showcase my data engineering skills. 
 
-1. **Clone the repository**  
+### Pre-requisites
+
+* docker on windows
+* docker-desktop on windows
+* docker-compose
+
+### Setup and Installation
+
+1. In Docker Desktop, go to **Settings → General** and check the box  
+   **“Expose daemon on tcp://localhost:2375 without TLS”**. (for some versions, restart Docker Desktop)
+
+1. **Clone this repository** on your Windows machine where Docker is already running  
    ```
    git clone https://github.com/gaetancorin/btc_eth_streaming_data.git
    ```
 
-2. **Create the .env files:**
-- Into **ingestion** folder:
+2. **Create the .env files:**  
+For each of the following folders: **airflow**, **ingestion**, **monitoring**, **postgres**:  
+- Copy `.env_example` to `.env` manually. (No need to modify them for the first run)
+
+3. **Start the services using Docker Compose**  
+- Run the orchestrator script:  
+  ```
+  .\orchestrateur.ps1
+  ```
+
+4. **That's it ! Access the services**:
+- Postgres: http://localhost:8081/
+- Airflow: http://localhost:8080/dags
+- Spark: http://localhost:8082/
+- Docker exporter (Python server that collects container states, CPU and memory): http://localhost:8000/
+- Prometheus: http://localhost:9090/targets
+- Grafana: http://localhost:3000/
+- Mailhog: http://localhost:8025/
+
+5. **Stop and delete all containers when done**:
+- Run the clean orchestrator script:  
+  ```
+  .\cleanorchestrateur.ps1
+  ```
