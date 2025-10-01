@@ -80,32 +80,29 @@ This project is designed as a proof of concept to showcase my data engineering s
 1. In Docker Desktop, go to **Settings → General** and check the box  
    **“Expose daemon on tcp://localhost:2375 without TLS”**. (for some versions, restart Docker Desktop)
 
-1. **Clone this repository** on your Windows machine where Docker is already running  
+2. **Clone this repository** on your Windows machine where Docker is already running  
    ```
    git clone https://github.com/gaetancorin/btc_eth_streaming_data.git
    ```
 
-2. **Create the .env files:**  
-For each of the following folders: **airflow**, **ingestion**, **monitoring**, **postgres**:  
-- Copy `.env_example` to `.env` manually. (No need to modify them for the first run)
+3. **Create the .env files** for each of the following folders: `airflow`, `ingestion`, `monitoring`, `postgres`:  
+- Copy `.env_example` to `.env` manually into each folder (No need to modify them for the first run).
 
-3. **Start the services using Docker Compose**  
-- Run the orchestrator script:  
+4. **Start all services** using the orchestrator script:  
   ```
   .\orchestrateur.ps1
   ```
 
-4. **That's it ! Access the services**:
-- Postgres: http://localhost:8081/
-- Airflow: http://localhost:8080/dags
-- Spark: http://localhost:8082/
-- Docker exporter (Python server that collects container states, CPU and memory): http://localhost:8000/
-- Prometheus: http://localhost:9090/targets
-- Grafana: http://localhost:3000/
-- Mailhog: http://localhost:8025/
+5. **That's it ! Access the services**:
+- **Postgres**: http://localhost:8081/ (Postgres default user/pass : admin@admin.com/password)
+- **Airflow**: http://localhost:8080/dags (Airflow default user/pass : airflow/airflow)
+- **Spark**: http://localhost:8082/
+- **Docker exporter** (Python server that collects container states, CPU and memory): http://localhost:8000/
+- **Prometheus**: http://localhost:9090/targets
+- **Grafana**: http://localhost:3000/ (Grafana default user/pass : admin/admin)
+- **Mailhog**: http://localhost:8025/
 
-5. **Stop and delete all containers when done**:
-- Run the clean orchestrator script:  
+6. **Stop and remove all containers** using the clean orchestrator script: 
   ```
   .\cleanorchestrateur.ps1
   ```
