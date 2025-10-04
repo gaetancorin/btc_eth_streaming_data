@@ -1,4 +1,4 @@
-# BTC & ETH Streaming Data
+# Crypto Pipeline Airflow Spark
 
 This project streams BTC/USD and ETH/USD data in real-time via a Python websocket ingestion system using the Yfinance library.
 
