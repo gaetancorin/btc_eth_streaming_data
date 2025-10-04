@@ -4,13 +4,13 @@ This project streams BTC/USD and ETH/USD data in real-time via a Python websocke
 
 The collected data is stored in **PostgreSQL**, while **Airflow** orchestrates the computation of technical indicators on a **Spark** cluster.
 
-Monitoring is handled with **Python**, **Prometheus**, and **Grafana**, 
+Monitoring is handled with **Python**, **Prometheus**, and **Grafana**. 
 
 An **email alert system** ensures notifications regarding potential problems on the ingestion pipeline, Airflow workflows or Grafana dashboards.
 
-The GitHub Actions **CI/CD pipeline** builds containers, runs unit tests on every commit, and routes emails to Mailhog in development or Gmail in production
+The GitHub Actions **CI/CD pipeline** builds containers, runs unit tests on every commit, and routes emails to Mailhog in development or Gmail in production.
 
-### Tech Stack
+## Tech Stack
 - **Python**
 - **PostgreSQL**
 - **Airflow**
@@ -20,21 +20,23 @@ The GitHub Actions **CI/CD pipeline** builds containers, runs unit tests on ever
 - **Mailhog**
 - **Github Action**
 
-### Global Architecture
+## Global Architecture
 ![Global Architecture](./_documentation/global_architecture.png)
 
-### Data pipelines
-There are two data pipelines in this project.
+## Data pipelines
+There are two data pipelines in this project:
 
-- The first pipeline handles BTC/USD and ETH/USD data. Data extraction and storage are performed in **real-time using Python websockets**. Technical indicators are processed through **Airflow DAGs**, and when necessary, computations are executed on a **Spark cluster**.
+### BTC/USD and ETH/USD pipeline
+This pipeline handles BTC/USD and ETH/USD data. Data extraction and storage are performed in **real-time using Python websockets**. Technical indicators are processed through **Airflow DAGs**, and computations are delegated to a **Spark cluster** when needed .
 
 ![Pipeline Data](./_documentation/pipeline_data.png)
 
-- The second pipeline handles monitoring of Docker containers. A Python script collects container status, CPU usage, and memory metrics from Docker running on WSL, and exposes this data for Prometheus storage. Grafana then visualizes the metrics in interactive dashboards, with a 30-second delay between an event and its display.
+### Monitoring Pipeline
+The second pipeline handles monitoring of **Docker containers**. A Python script collects container status, CPU usage, and memory metrics from Docker running on WSL, and exposes this data for **Prometheus storage**. **Grafana** then visualizes the metrics in interactive dashboards, with a 30-second delay between an event and its display.
 
 ![Pipeline Monitoring](./_documentation/pipeline_monitoring.png)
 
-### CI/CD (Continuous Integration / Continuous Deployment)
+## CI/CD (Continuous Integration / Continuous Deployment)
 
 This project uses two GitHub Actions workflows for CI/CD:
 
