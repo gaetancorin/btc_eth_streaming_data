@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  continuous_integration_without_spark:
+  continuous_integration:
     runs-on: ubuntu-latest
     environment: dev
     steps:
@@ -106,21 +106,3 @@ jobs:
       - name: Run Ingestion Unit Tests
         run: |
           docker exec ingestion_streaming python -m pytest -v -s tests/
-
-  # Spark have this specific job because of memory overflow
-  continuous_integration_spark_only:
-    runs-on: ubuntu-latest
-    environment: dev
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set up Docker
-        uses: docker/setup-buildx-action@v2
-
-      # Spark (create the expected network to perform the build)
-      - name: Start Spark
-        run: |
-          docker network create postgres_streaming_default
-          cd spark
-          docker compose -p spark_streaming up -d --build
