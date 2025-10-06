@@ -51,11 +51,13 @@ jobs:
           
           docker compose -p monitoring_streaming up -d --build
 
-      # Spark
+      # Spark (prune is used for cleaning build cache and unused volumes)
       - name: Start Spark
         run: |
+          docker builder prune -af && docker volume prune -f
           cd spark
           docker compose -p spark_streaming up -d --build
+          docker builder prune -af && docker volume prune -f
 
       # Airflow
       - name: Start Airflow
