@@ -57,30 +57,30 @@ jobs:
       #    cd spark
       #    docker compose -p spark_streaming up -d --build
 
-      # Airflow
-      - name: Start Airflow
-        run: |
-          cd airflow
-
-          # Generate a temporary .env file
-          echo "AIRFLOW_UID=${{ vars.AIRFLOW_UID }}" > .env
-          echo "PG_HOST=${{ vars.PG_HOST }}" >> .env
-          echo "PG_PORT=${{ vars.PG_PORT }}" >> .env
-          echo "PG_DBNAME=${{ vars.PG_DBNAME }}" >> .env
-          echo "PG_USER=${{ vars.PG_USER }}" >> .env
-          echo "PG_PASSWORD=${{ secrets.PG_PASSWORD }}" >> .env
-          echo "AIRFLOW_CONN_MY_POSTGRES=${{ vars.AIRFLOW_CONN_MY_POSTGRES }}" >> .env
-          echo "SPARK_HOST=${{ vars.SPARK_HOST }}" >> .env
-          echo "SPARK_PORT=${{ vars.SPARK_PORT }}" >> .env
-          echo "SPARK_PARAM=${{ vars.SPARK_PARAM }}" >> .env
-          echo "AIRFLOW_CONN_MY_SPARK=${{ vars.AIRFLOW_CONN_MY_SPARK }}" >> .env
-          echo "SMTP_USER=${{ secrets.SMTP_USER }}" >> .env
-          echo "SMTP_PASS=${{ secrets.SMTP_PASS }}" >> .env
-          echo "SMTP_SERVER=${{ vars.SMTP_SERVER }}" >> .env
-          echo "SMTP_PORT=${{ vars.SMTP_PORT }}" >> .env
-          echo "RECEIVER=${{ vars.RECEIVER }}" >> .env
-
-          docker compose -p airflow_streaming up -d --build
+      ## Airflow
+      #- name: Start Airflow
+      #  run: |
+      #    cd airflow
+      #
+      #    # Generate a temporary .env file
+      #    echo "AIRFLOW_UID=${{ vars.AIRFLOW_UID }}" > .env
+      #    echo "PG_HOST=${{ vars.PG_HOST }}" >> .env
+      #    echo "PG_PORT=${{ vars.PG_PORT }}" >> .env
+      #    echo "PG_DBNAME=${{ vars.PG_DBNAME }}" >> .env
+      #    echo "PG_USER=${{ vars.PG_USER }}" >> .env
+      #    echo "PG_PASSWORD=${{ secrets.PG_PASSWORD }}" >> .env
+      #    echo "AIRFLOW_CONN_MY_POSTGRES=${{ vars.AIRFLOW_CONN_MY_POSTGRES }}" >> .env
+      #    echo "SPARK_HOST=${{ vars.SPARK_HOST }}" >> .env
+      #    echo "SPARK_PORT=${{ vars.SPARK_PORT }}" >> .env
+      #    echo "SPARK_PARAM=${{ vars.SPARK_PARAM }}" >> .env
+      #    echo "AIRFLOW_CONN_MY_SPARK=${{ vars.AIRFLOW_CONN_MY_SPARK }}" >> .env
+      #    echo "SMTP_USER=${{ secrets.SMTP_USER }}" >> .env
+      #    echo "SMTP_PASS=${{ secrets.SMTP_PASS }}" >> .env
+      #    echo "SMTP_SERVER=${{ vars.SMTP_SERVER }}" >> .env
+      #    echo "SMTP_PORT=${{ vars.SMTP_PORT }}" >> .env
+      #    echo "RECEIVER=${{ vars.RECEIVER }}" >> .env
+      #
+      #    docker compose -p airflow_streaming up -d --build
 
       # Ingestion
       - name: Start Ingestion
@@ -107,6 +107,7 @@ jobs:
         run: |
           docker exec ingestion_streaming python -m pytest -v -s tests/
 
+
   # Spark have this specific job because of memory overflow
   continuous_integration_spark_only:
     runs-on: ubuntu-latest
@@ -124,3 +125,41 @@ jobs:
           docker network create postgres_streaming_default
           cd spark
           docker compose -p spark_streaming up -d --build
+
+
+  # Airflow have this specific job because of memory overflow
+  continuous_integration_airflow_only:
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+
+      # Airflow (create the expected network to perform the build)
+      - name: Start Airflow
+        run: |
+          docker network create postgres_streaming_default
+          cd airflow
+
+          # Generate a temporary .env file
+          echo "AIRFLOW_UID=${{ vars.AIRFLOW_UID }}" > .env
+          echo "PG_HOST=${{ vars.PG_HOST }}" >> .env
+          echo "PG_PORT=${{ vars.PG_PORT }}" >> .env
+          echo "PG_DBNAME=${{ vars.PG_DBNAME }}" >> .env
+          echo "PG_USER=${{ vars.PG_USER }}" >> .env
+          echo "PG_PASSWORD=${{ secrets.PG_PASSWORD }}" >> .env
+          echo "AIRFLOW_CONN_MY_POSTGRES=${{ vars.AIRFLOW_CONN_MY_POSTGRES }}" >> .env
+          echo "SPARK_HOST=${{ vars.SPARK_HOST }}" >> .env
+          echo "SPARK_PORT=${{ vars.SPARK_PORT }}" >> .env
+          echo "SPARK_PARAM=${{ vars.SPARK_PARAM }}" >> .env
+          echo "AIRFLOW_CONN_MY_SPARK=${{ vars.AIRFLOW_CONN_MY_SPARK }}" >> .env
+          echo "SMTP_USER=${{ secrets.SMTP_USER }}" >> .env
+          echo "SMTP_PASS=${{ secrets.SMTP_PASS }}" >> .env
+          echo "SMTP_SERVER=${{ vars.SMTP_SERVER }}" >> .env
+          echo "SMTP_PORT=${{ vars.SMTP_PORT }}" >> .env
+          echo "RECEIVER=${{ vars.RECEIVER }}" >> .env
+
+          docker compose -p airflow_streaming up -d --build
