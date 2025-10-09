@@ -51,11 +51,11 @@ jobs:
           
           docker compose -p monitoring_streaming up -d --build
 
-      # Spark
-      - name: Start Spark
-        run: |
-          cd spark
-          docker compose -p spark_streaming up -d --build
+      ## Spark
+      #- name: Start Spark
+      #  run: |
+      #    cd spark
+      #    docker compose -p spark_streaming up -d --build
 
       # Airflow
       - name: Start Airflow
