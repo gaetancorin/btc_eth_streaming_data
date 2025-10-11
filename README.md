@@ -1,5 +1,7 @@
 # Crypto Pipeline Airflow Spark
 
+[<img src="https://img.shields.io/badge/LinkedIn-Gaetan%20Corin%20–%20Data%20Engineer-blue.svg?logo=linkedin" alt="LinkedIn" style="vertical-align: middle;"/>](https://www.linkedin.com/in/gaetancorin/)
+
 This project streams BTC/USD and ETH/USD data in real-time via a Python websocket ingestion system using the Yfinance library.
 
 The collected data is stored in **PostgreSQL**, while **Airflow** orchestrates the computation of technical indicators on a **Spark** cluster.
