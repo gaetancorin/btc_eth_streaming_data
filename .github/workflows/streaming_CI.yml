@@ -144,7 +144,7 @@ jobs:
           echo "SMTP_PORT=${{ vars.SMTP_PORT }}" >> .env
           echo "RECEIVER=${{ vars.RECEIVER }}" >> .env
 
-          docker compose -p airflow_streaming up -d --build
+          docker compose -p airflow_streaming up -d
 
 
   # finalize job for help alerting when CI is done and success
