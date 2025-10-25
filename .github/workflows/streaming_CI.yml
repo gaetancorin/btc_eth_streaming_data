@@ -145,3 +145,13 @@ jobs:
           echo "RECEIVER=${{ vars.RECEIVER }}" >> .env
 
           docker compose -p airflow_streaming up -d --build
+
+
+  # finalize job for help alerting when CI is done and success
+  finalize:
+      runs-on: ubuntu-latest
+      needs:
+        - continuous_integration_without_airflow
+        - continuous_integration_airflow_only
+      steps:
+        - run: echo "All CI jobs done"
